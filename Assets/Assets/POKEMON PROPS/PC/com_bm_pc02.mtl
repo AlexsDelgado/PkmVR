@@ -1,0 +1,42 @@
+# Blender MTL File: 'Models-Resource Submission Renders.blend'
+# Material Count: 4
+
+newmtl com_bm_pc02_mat
+Ns 0.000000
+Ka 0.000000 0.000000 0.000000
+Kd 0.640000 0.640000 0.640000
+Ks 0.500000 0.500000 0.500000
+Ni -1.000000
+d 1.000000
+illum 2
+map_Kd com_bm_pc02.png
+
+newmtl com_bm_pc02a_mat
+Ns -3.921569
+Ka 0.000000 0.000000 0.000000
+Kd 0.640000 0.640000 0.640000
+Ks 0.500000 0.500000 0.500000
+Ni -1.000000
+d 1.000000
+illum 2
+map_Kd com_bm_pc02a.png
+
+newmtl com_bm_pc02b_mat
+Ns -3.921569
+Ka 0.000000 0.000000 0.000000
+Kd 0.640000 0.640000 0.640000
+Ks 0.500000 0.500000 0.500000
+Ni -1.000000
+d 1.000000
+illum 2
+map_Kd com_bm_pc02b.png
+
+newmtl shadow_a_mat
+Ns -3.921569
+Ka 0.000000 0.000000 0.000000
+Kd 0.640000 0.640000 0.640000
+Ks 0.500000 0.500000 0.500000
+Ni -1.000000
+d 1.000000
+illum 2
+map_Kd shadow_a.png
