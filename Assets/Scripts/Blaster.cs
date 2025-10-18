@@ -1,3 +1,4 @@
+
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -10,8 +11,7 @@ public class Blaster : MonoBehaviour
 
     public void Shoot()
     {
-        GameObject bala = Instantiate(bullet, bulletSpawnPoint.position,bulletSpawnPoint.rotation);
-        bala.GetComponent<Rigidbody>().AddForce(bulletSpawnPoint.forward*1000f);
+        GameObject bulletGO = Instantiate(bullet, bulletSpawnPoint.position,bulletSpawnPoint.rotation);
+        bulletGO.GetComponent<Rigidbody>().AddForce(bulletSpawnPoint.forward*1000f);
     }
-    
 }
