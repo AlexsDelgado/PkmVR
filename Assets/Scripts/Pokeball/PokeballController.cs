@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using UnityEngine.XR.Interaction.Toolkit;
+using System.Collections;
 
 [RequireComponent(typeof(Rigidbody), typeof(Collider), typeof(XRGrabInteractable))]
 public class PokeballController : MonoBehaviour
@@ -20,10 +21,15 @@ public class PokeballController : MonoBehaviour
     [SerializeField] private float spawnLift = 0.2f;          
     private float nextRetrievalTime = Mathf.NegativeInfinity;
 
+    [SerializeField] private float captureBounceForce = 4f;
+    [SerializeField] private Vector2 captureSidewaysRandom = new Vector2(-0.5f, 0.5f);
+
     private XRGrabInteractable grab;
     private Rigidbody rb;
     private BallState state = BallState.Loaded;
     private PokemonController activePokemon;
+
+    [SerializeField] private BallFXController fx;
 
     void Awake()
     {
@@ -65,6 +71,7 @@ public class PokeballController : MonoBehaviour
     {
         // Usually means a hand/controller grabbed & released us → resume physics
         MakeDynamicForThrow();
+        fx?.OnThrowStart();
     }
 
     // --- Collisions / triggers ----------------------------------------------
@@ -73,15 +80,14 @@ public class PokeballController : MonoBehaviour
     {
         if (state == BallState.Loaded && IsGround(col.gameObject.layer))
         {
-            // Spawn Pokémon where we landed
             var cp = col.GetContact(0);
             var spawnPos = cp.point + cp.normal * spawnLift;
+            fx?.PlayImpactSet(cp.point, cp.normal);
 
-            SpawnPokemonAt(col.GetContact(0).point);
+            // existing
+            SpawnPokemonAt(spawnPos);
             state = BallState.Empty;
-
             nextRetrievalTime = Time.time + retrievalCooldown;
-
             Invoke(nameof(RecallToBelt), recallDelay);
             return;
         }
@@ -104,11 +110,9 @@ public class PokeballController : MonoBehaviour
             p.Despawn();
             activePokemon = null;
             state = BallState.Loaded;
-
-            // Reset cooldown; not needed anymore until next spawn
             nextRetrievalTime = Mathf.NegativeInfinity;
-
-            Invoke(nameof(RecallToBelt), recallDelay);
+            CaptureBounce();
+            StartCoroutine(RecallAfterDelay());
         }
     }
 
@@ -121,17 +125,31 @@ public class PokeballController : MonoBehaviour
         activePokemon?.Init();
     }
 
+    private void CaptureBounce()
+    {
+        if (!rb) return;
+
+        rb.velocity = Vector3.zero;
+        rb.angularVelocity = Vector3.zero;
+
+        // Up plus a little random sideways so it looks nice
+        float sideX = Random.Range(captureSidewaysRandom.x, captureSidewaysRandom.y);
+        float sideZ = Random.Range(captureSidewaysRandom.x, captureSidewaysRandom.y);
+        Vector3 dir = new Vector3(sideX, 1f, sideZ).normalized;
+
+        rb.AddForce(dir * captureBounceForce, ForceMode.VelocityChange);
+    }
+
     private bool IsGround(int layer) => (groundMask.value & (1 << layer)) != 0;
 
     private void RecallToBelt()
     {
-        // Stop motion and dock
         rb.velocity = Vector3.zero;
         rb.angularVelocity = Vector3.zero;
         DockToBeltImmediate();
-
-        // Ask the socket to "own" us so we stay put
         TrySocketSelect();
+        fx?.OnThrowEnd();
+        fx?.PlayRecallBlink(beltAttach);
     }
 
     private void DockToBeltImmediate()
@@ -169,7 +187,7 @@ public class PokeballController : MonoBehaviour
             manager.SelectEnter(beltSocket, interactable);
     }
 
-    System.Collections.IEnumerator InitialDockRoutine()
+    private IEnumerator InitialDockRoutine()
     {
         var col = GetComponent<Collider>();
         bool hadCol = col && col.enabled;
@@ -192,5 +210,12 @@ public class PokeballController : MonoBehaviour
         // Re-enable collider shortly after (tiny delay avoids overlap jitters)
         yield return new WaitForSeconds(0.05f);
         if (col && hadCol) col.enabled = true;
+    }
+
+    private IEnumerator RecallAfterDelay()
+    {
+        // adjust to taste; enough time to see the bounce arc
+        yield return new WaitForSeconds(0.35f);
+        RecallToBelt();
     }
 }
