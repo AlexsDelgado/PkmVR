@@ -2462,7 +2462,7 @@ MonoBehaviour:
   vadThd: 1
   vadFreqThd: 100
   vadIndicatorImage: {fileID: 0}
-  vadStop: 1
+  vadStop: 0
   dropVadPart: 1
   vadStopTime: 1
   microphoneDropdown: {fileID: 0}
