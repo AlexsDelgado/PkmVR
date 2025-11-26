@@ -105,6 +105,8 @@ namespace Whisper
         private WhisperParams _params;
         private readonly MainThreadDispatcher _dispatcher = new MainThreadDispatcher();
 
+        public event Action<string> OnPartialTranscription;
+
         public string ModelPath
         {
             get => modelPath;
@@ -149,7 +151,7 @@ namespace Whisper
             
             if (!initOnAwake)
                 return;
-            await InitModel();
+            //await InitModel();
         }
 
         private void OnValidate()
@@ -293,9 +295,19 @@ namespace Whisper
                 frequency, channels, stepSec, keepSec, lengthSec, updatePrompt,
                 dropOldBuffer, useVad);
             var stream = new WhisperStream(_whisper, param, microphone);
+
+            // Forward streaming text updates as "partial transcription"
+            stream.OnResultUpdated += s =>
+            {
+                _dispatcher.Execute(() =>
+                {
+                    OnPartialTranscription?.Invoke(s);
+                });
+            };
+
             return stream;
         }
-        
+
         private void UpdateParams()
         {
             _params.Language = language;

@@ -9,7 +9,7 @@ public class VoiceCommandRouter : MonoBehaviour
         lastHeard = text;
         Debug.Log($"[Voice] {text}");
 
-        // Minimal Spanish keywords – expand as you like
+        // Minimal Spanish keywords – test cases
         if (text.Contains("atacar") || text.Contains("ataque"))
         {
             // AbilityResolver.Instance.Queue("Attack");
@@ -26,6 +26,5 @@ public class VoiceCommandRouter : MonoBehaviour
         {
             // AbilityResolver.Instance.Queue("Thunderbolt");
         }
-        // add more…
     }
 }

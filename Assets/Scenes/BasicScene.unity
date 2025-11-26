@@ -2373,8 +2373,8 @@ MonoBehaviour:
   logLevel: 1
   modelPath: WhisperModels/ggml-base.q5_1.bin
   isModelPathInStreamingAssets: 1
-  initOnAwake: 1
-  useGpu: 0
+  initOnAwake: 0
+  useGpu: 1
   flashAttention: 0
   language: es
   translateToEnglish: 0
@@ -2383,10 +2383,10 @@ MonoBehaviour:
   singleSegment: 0
   enableTokens: 0
   initialPrompt: 
-  stepSec: 1
-  keepSec: 0.2
-  lengthSec: 4
-  updatePrompt: 1
+  stepSec: 0.5
+  keepSec: 0
+  lengthSec: 2
+  updatePrompt: 0
   dropOldBuffer: 0
   useVad: 1
   tokensTimestamps: 0
@@ -2434,6 +2434,10 @@ MonoBehaviour:
   whisper: {fileID: 1060460184}
   mic: {fileID: 1060460188}
   router: {fileID: 1060460186}
+  preferredDeviceSubstring: Microphone (Wireless Stereo Headset)
+  logDevices: 1
+  logPartial: 1
+  logFinal: 1
 --- !u!114 &1060460188
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2448,7 +2452,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   maxLengthSec: 60
   loop: 0
-  frequency: 16000
+  frequency: 48000
   chunksLengthSec: 0.5
   echo: 1
   useVad: 1
@@ -2458,9 +2462,9 @@ MonoBehaviour:
   vadThd: 1
   vadFreqThd: 100
   vadIndicatorImage: {fileID: 0}
-  vadStop: 0
+  vadStop: 1
   dropVadPart: 1
-  vadStopTime: 3
+  vadStopTime: 1
   microphoneDropdown: {fileID: 0}
   microphoneDefaultLabel: Default microphone
 --- !u!1 &1103779573

@@ -1,116 +1,223 @@
+﻿using System;
+using System.Threading.Tasks;
 using UnityEngine;
 using Whisper;
 using Whisper.Utils;
 
+//Connects: Quest microphone  →  Whisper streaming  →  VoiceCommandRouter.
 public class WhisperStreamBridge : MonoBehaviour
 {
     [Header("References")]
-    public WhisperManager whisper;
-    public MicrophoneRecord mic;
-    public VoiceCommandRouter router;
+    [SerializeField] private WhisperManager whisper;
+    [SerializeField] private MicrophoneRecord mic;
+    [SerializeField] private VoiceCommandRouter router;
+
+    [Header("Microphone")]
+    [Tooltip("Substring to search in Microphone.devices. Leave empty to use OS default.")]
+    [SerializeField] private string preferredDeviceSubstring;
+
+    [Header("Debug")]
+    [SerializeField] private bool logDevices = true;
+    [SerializeField] private bool logPartial = true;
+    [SerializeField] private bool logFinal = true;
 
     private WhisperStream _stream;
     private bool _started;
 
+    // ---------- LIFECYCLE ----------
+
     private async void OnEnable()
     {
-        if (!whisper) { Debug.LogError("[Whisper] Missing WhisperManager reference"); return; }
-        if (!mic) { Debug.LogError("[Whisper] Missing MicrophoneRecord reference"); return; }
+        if (!ValidateRefs())
+            return;
 
-        // Wait for model to load
-        if (!whisper.IsLoaded)
-        {
-            Debug.Log("[Whisper] Waiting for model to load...");
-            await whisper.InitModel();
-        }
+        // Ensure model is ready
+        await EnsureModelLoaded();
 
         if (!whisper.IsLoaded)
         {
-            Debug.LogError("[Whisper] Model failed to load!");
+            Debug.LogError("[WhisperBridge] Model not loaded, aborting.");
             return;
         }
 
-        // Start mic
-        var dev = PickMic("Oculus Virtual Audio");         // or "Steam Streaming" if using Steam Link
-        Debug.Log("[Mic] Using device: " + dev);
+        // Select Quest microphone and tell MicrophoneRecord to use it
+        string device = PickMicDevice();
+        if (string.IsNullOrEmpty(device))
+        {
+            Debug.LogError("[WhisperBridge] No microphone device found.");
+            return;
+        }
 
-        mic.StartRecord();
-        mic.OnChunkReady += OnChunk;
+        mic.SelectedMicDevice = device;
 
-        int min, max;
-        Microphone.GetDeviceCaps(dev, out min, out max);
-        Debug.Log($"[Mic] Caps for '{dev}': min={min}, max={max} (0 means 'unspecified')");
+        if (logDevices)
+        {
+            int min, max;
+            Microphone.GetDeviceCaps(device, out min, out max);
+            Debug.Log($"[WhisperBridge] Using mic: '{device}' (min={min}, max={max})");
+        }
 
-        // Create the whisper stream based on mic
-        _stream = await whisper.CreateStream(mic.frequency, 1);
+        // Create streaming session bound to this mic
+        _stream = await whisper.CreateStream(mic);
         if (_stream == null)
         {
-            Debug.LogError("[Whisper] Could not create Whisper stream");
+            Debug.LogError("[WhisperBridge] Failed to create WhisperStream.");
             return;
         }
 
         // Hook events
-        _stream.OnSegmentFinished += OnSegment;
-        _stream.OnResultUpdated += OnPartial;
-        _stream.OnStreamFinished += OnFinal;
+        HookEvents(true);
+
+        // Start audio + stream
+        _stream.StartStream();
+        mic.StartRecord();
 
         _started = true;
-        Debug.Log("[Whisper] Streaming started!");
+        Debug.Log("[WhisperBridge] Streaming started.");
     }
 
     private void OnDisable()
     {
-        if (!_started) return;
+        if (!_started)
+            return;
 
-        mic.OnChunkReady -= OnChunk;
-        mic.StopRecord();
+        // Stop mic first so we stop producing data
+        if (mic != null)
+            mic.StopRecord();
 
+        // Stop / dispose stream
         if (_stream != null)
         {
-            _stream.OnSegmentFinished -= OnSegment;
-            _stream.OnResultUpdated -= OnPartial;
-            _stream.OnStreamFinished -= OnFinal;
+            HookEvents(false);
             _stream.StopStream();
             _stream = null;
         }
 
         _started = false;
-        Debug.Log("[Whisper] Streaming stopped!");
+        Debug.Log("[WhisperBridge] Streaming stopped.");
     }
 
-    private void OnChunk(AudioChunk chunk)
+    // ---------- EVENT WIRING ----------
+
+    private void HookEvents(bool subscribe)
     {
-        if (_stream == null) return;
-        _stream.AddToStream(chunk);
+        if (whisper == null)
+            return;
+
+        if (subscribe)
+        {
+            // FINAL segments
+            whisper.OnNewSegment += HandleNewSegment;
+
+            // Optional: partial text for live feedback
+            whisper.OnPartialTranscription += HandlePartial;
+        }
+        else
+        {
+            whisper.OnNewSegment -= HandleNewSegment;
+            whisper.OnPartialTranscription -= HandlePartial;
+        }
     }
 
-    private void OnPartial(string partial)
+    private bool IsOnlySpecialTokens(string text)
     {
-        // live update for debugging
-        Debug.Log($"Partial: {partial}");
+        if (string.IsNullOrWhiteSpace(text))
+            return true;
+
+        var parts = text.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+        foreach (var p in parts)
+        {
+            var t = p.Trim();
+            if (!t.StartsWith("[") || !t.EndsWith("]"))
+                return false; // we found a real word
+        }
+        return true; // all tokens are [LIKE_THIS]
     }
 
-    private void OnSegment(WhisperResult segment)
+    private void HandlePartial(string text)
     {
-        if (segment == null || string.IsNullOrEmpty(segment.Result)) return;
-        var text = segment.Result.Trim().ToLowerInvariant();
-        Debug.Log($"[Whisper] Segment: {text}");
+        if (IsOnlySpecialTokens(text))
+            return;
+
+        if (logPartial)
+            Debug.Log("[WhisperBridge] Partial: " + text);
+    }
+
+    private void HandleNewSegment(WhisperSegment seg)
+    {
+        if (seg == null) return;
+
+        var text = seg.Text;
+        if (IsOnlySpecialTokens(text))
+            return;
+
+        text = text.Trim();
+        if (string.IsNullOrEmpty(text)) return;
+
+        if (logFinal)
+            Debug.Log("[WhisperBridge] FINAL: " + text);
+
         router?.OnWhisperResult(text);
     }
 
-    private void OnFinal(string finalText)
+    // ---------- UTILITIES ----------
+
+    private bool ValidateRefs()
     {
-        if (string.IsNullOrEmpty(finalText)) return;
-        Debug.Log($"[Whisper] Final: {finalText}");
-        router?.OnWhisperResult(finalText.ToLowerInvariant());
+        bool ok = true;
+
+        if (whisper == null)
+        {
+            Debug.LogError("[WhisperBridge] Missing WhisperManager reference.");
+            ok = false;
+        }
+        if (mic == null)
+        {
+            Debug.LogError("[WhisperBridge] Missing MicrophoneRecord reference.");
+            ok = false;
+        }
+        if (!ok)
+            enabled = false;
+
+        return ok;
     }
 
-    string PickMic(string preferredContains)
+    private async Task EnsureModelLoaded()
     {
-        foreach (var d in Microphone.devices)
-            if (d.IndexOf(preferredContains, System.StringComparison.OrdinalIgnoreCase) >= 0)
-                return d;
-        return Microphone.devices.Length > 0 ? Microphone.devices[0] : null;
+        if (whisper.IsLoaded)
+            return;
+
+        Debug.Log("[WhisperBridge] Waiting for Whisper model to load...");
+        await whisper.InitModel();
+
+        if (whisper.IsLoaded)
+            Debug.Log("[WhisperBridge] Model loaded.");
     }
 
+    // Try to pick Quest mic by substring; fall back to first device.
+    private string PickMicDevice()
+    {
+        var devices = Microphone.devices;
+        if (devices == null || devices.Length == 0)
+            return null;
+
+        if (logDevices)
+        {
+            Debug.Log("[WhisperBridge] Available mics:");
+            foreach (var d in devices)
+                Debug.Log("  - " + d);
+        }
+
+        if (!string.IsNullOrEmpty(preferredDeviceSubstring))
+        {
+            foreach (var d in devices)
+            {
+                if (d.IndexOf(preferredDeviceSubstring, StringComparison.OrdinalIgnoreCase) >= 0)
+                    return d;
+            }
+        }
+
+        // Fallback: first device
+        return devices[0];
+    }
 }
