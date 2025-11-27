@@ -10,9 +10,15 @@ public class PokemonsManager : MonoBehaviour
     {
         Instance = this;
     }
-        
+
+    [Header("Pokemons")]
     [SerializeField] StoredPokemon[] equiped_pokemons;
     public List<StoredPokemon> my_pokemons = new List<StoredPokemon>();
+
+    [Header("Global parameters")]
+    [SerializeField] int exp_to_lvl_up_base;
+    [SerializeField] int extra_exp_per_lvl;
+
 
     public void AddNewPokemon(PokemonData my_pokemon, int lvl, MoveData[] moves)
     {
@@ -35,6 +41,18 @@ public class PokemonsManager : MonoBehaviour
         my_pokemons[pkm_idx].UnequipMove(old_move);
     }
 
+    public void HealAllPokemon()    //Para el centro polemon
+    {
+        if (equiped_pokemons[0] != null) equiped_pokemons[0].HealPokemon();
+        if (equiped_pokemons[1] != null) equiped_pokemons[1].HealPokemon();
+        if (equiped_pokemons[2] != null) equiped_pokemons[2].HealPokemon();
+    }
+
+    public int ExpToLvlUp(int actual_lvl)
+    {
+        return exp_to_lvl_up_base + actual_lvl * extra_exp_per_lvl;
+    }
+        
 }
 
 [Serializable]
@@ -44,7 +62,7 @@ public class StoredPokemon
     int current_health;
     public int current_lvl;
     int current_exp;
-    MoveData[] active_moves;
+    public MoveData[] active_moves;
     public bool equiped;
     public int captured_number;
 
@@ -60,29 +78,49 @@ public class StoredPokemon
     }
 
     public void UpdateMoves(MoveData[] moves)
-    {
-        active_moves = moves;
-    }
-    public void EquipMove(MoveData new_move)
-    {
-        for (int i = 0; i < 4; i++)
         {
-            if (active_moves[i] == null)
+            active_moves = moves;
+        }
+    public void EquipMove(MoveData new_move)
+        {
+            for (int i = 0; i < 4; i++)
             {
-                active_moves[i] = new_move;
-                return;
+                if (active_moves[i] == null)
+                {
+                    active_moves[i] = new_move;
+                    return;
+                }
             }
         }
-    }
     public void UnequipMove(MoveData old_move)
-    {
-        for (int i = 0; i < 4; i++)
         {
-            if (active_moves[i].ID == old_move.ID)
+            for (int i = 0; i < 4; i++)
             {
-                active_moves[i] = null;
-                return;
+                if (active_moves[i].ID == old_move.ID)
+                {
+                    active_moves[i] = null;
+                    return;
+                }
             }
+        }
+    public void HealPokemon(int value = -1)
+    {
+        current_health += value;
+        if (value < 0 || current_health > pokemon.GetHealth(current_lvl))
+        {
+            current_health = pokemon.GetHealth(current_lvl);
+        }
+    }
+    public void AddEXP(int value)
+    {
+        current_exp += value;
+        int exp_needed = PokemonsManager.Instance.ExpToLvlUp(current_lvl);
+        if (current_exp >= exp_needed)
+        {
+            current_lvl++;
+            current_exp -= exp_needed;
         }
     }
 }
+    
+

@@ -7,21 +7,27 @@ public class MoveData : ScriptableObject
 {
     [Header("Info")]
     public int ID;
-    [SerializeField] TypeData type;
-    [SerializeField] bool specialType;
+    public TypeData move_type;
+    public DMGType dmg_type;
 
     [Header("Effect")]
-    [SerializeField] bool DMG;
-    [SerializeField] bool HEAL;
-    [SerializeField] bool PROTECTION;
+    public bool DMG;
+    public bool HEAL;
+    public bool PROTECTION;
 
     [Header("Quantity")]
-    [SerializeField] int dmg_ammount;
+    public int dmg_ammount;
     [Range(0, 100)]
-    [SerializeField] int heal_ammount;
+    public int heal_ammount;
 
     [Header("Stats")]
-    [SerializeField] int coolDown;
+    public int coolDown;
     [Range(0, 100)]
-    [SerializeField] int hitChance;
+    public int hitChance = 100;
+}
+
+public enum DMGType
+{
+    Physicañ,
+    Special
 }

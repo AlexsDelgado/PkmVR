@@ -6,7 +6,8 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "TypeData", menuName = "GameData/Type")]
 public class TypeData : ScriptableObject
 {
-    [SerializeField] List<TypeInteraction> interactions = new List<TypeInteraction>();
+    public int ID;
+    public List<TypeInteraction> interactions = new List<TypeInteraction>();
 }
 
 [Serializable]

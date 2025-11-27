@@ -8,10 +8,11 @@ public class PokemonData : ScriptableObject
 {
     [Header("Info")]
     public Sprite portrait;
+    public GameObject model_pf;
 
     [Header("Types")]
-    [SerializeField] TypeData type1;
-    [SerializeField] TypeData type2;
+    public TypeData type1;
+    // public TypeData type2;
 
     [Header("Base Stats")]
     [SerializeField] int maxHP;

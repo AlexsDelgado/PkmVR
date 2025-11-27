@@ -40,6 +40,10 @@ public class PC_Manager : MonoBehaviour
             pc_pokemons[i].GetComponent<PC_PKM_Button>().SetPKMButton(pkmList[i]);
 
         }
+        for (int i = pkmList.Count; i < pc_pokemons.Count; i++)
+        {
+            pc_pokemons[i].SetActive(false);
+        }
     }
 
     public void ShowPKMDetails(StoredPokemon pkm)

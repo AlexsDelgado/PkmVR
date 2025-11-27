@@ -1,0 +1,35 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 739b5d897aa389845a91f2b69287d735, type: 3}
+  m_Name: Red
+  m_EditorClassIdentifier: 
+  TrainerName: Red
+  model_pb: {fileID: 0}
+  recomended_lvl: 5
+  pokemons:
+  - pokemon: {fileID: 11400000, guid: 20af0fba56427c2469a047f0fe78a7c5, type: 2}
+    current_lvl: 2
+    active_moves: []
+    equiped: 0
+    captured_number: 0
+  - pokemon: {fileID: 11400000, guid: 20af0fba56427c2469a047f0fe78a7c5, type: 2}
+    current_lvl: 0
+    active_moves: []
+    equiped: 0
+    captured_number: 0
+  - pokemon: {fileID: 11400000, guid: 20af0fba56427c2469a047f0fe78a7c5, type: 2}
+    current_lvl: 0
+    active_moves: []
+    equiped: 0
+    captured_number: 0
+  exp: 5
+  money: 20

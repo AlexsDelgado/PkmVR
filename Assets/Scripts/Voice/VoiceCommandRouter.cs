@@ -8,7 +8,30 @@ using static UnityEngine.Rendering.DebugUI.Table;
 public class VoiceCommandRouter : MonoBehaviour
 {
     [TextArea] public string lastHeard;
-
+    bool in_combat = false;
+    CombatManager combatManager;
+    string[] movesName = new string[4];
+    private void Start()
+    {
+        combatManager = CombatManager.instance;
+        combatManager.combatStart += SwapCombatState;
+        combatManager.changePKM += SetMoveNames;
+    }
+    void SwapCombatState()
+    {
+        in_combat = !in_combat;
+    }
+    void SetMoveNames()
+    {
+        for (int i = 0; i < movesName.Length; i++)
+        {
+            if (combatManager.my_avtive_pokemon.moves[i] == null)
+            {
+                movesName[i] = "Pegelagarto";
+            }
+            movesName[i] = combatManager.my_avtive_pokemon.moves[i].name;
+        }
+    }
     string Normalize(string s)
     {
         if (string.IsNullOrEmpty(s))
@@ -85,6 +108,25 @@ public class VoiceCommandRouter : MonoBehaviour
         else if (ContainsApprox(text, "rayo") || ContainsApprox(text, "trueno"))
         {
             // AbilityResolver.Instance.Queue("Thunderbolt");
+        }
+
+        //Use this for the combat
+        if (!in_combat) return;
+        if (ContainsApprox(text, movesName[0]))
+        {
+            combatManager.CommandMove(0);
+        }
+        else if (ContainsApprox(text, movesName[1]))
+        {
+            combatManager.CommandMove(1);
+        }
+        else if (ContainsApprox(text, movesName[2]))
+        {
+            combatManager.CommandMove(2);
+        }
+        else if (ContainsApprox(text, movesName[4]))
+        {
+            combatManager.CommandMove(3);
         }
     }
 }
