@@ -6,6 +6,9 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "PokemonData", menuName = "GameData/Pokemon")]
 public class PokemonData : ScriptableObject
 {
+    [Header("Info")]
+    public Sprite portrait;
+
     [Header("Types")]
     [SerializeField] TypeData type1;
     [SerializeField] TypeData type2;
@@ -27,7 +30,14 @@ public class PokemonData : ScriptableObject
     [SerializeField] int extra_velocity;
 
     [Header("Moves")]
-    [SerializeField] Move[] moveList;
+    public Move[] moveList;
+
+    public int GetHealth(int lvl) => maxHP + extra_maxHP * lvl;
+    public int GetPhysicalDMG(int lvl) => physicalDMG + extra_physicalDMG * lvl;
+    public int GetSpecialDMG(int lvl) => specialDMG + extra_specialDMG * lvl;
+    public int GetPhysicalDeff(int lvl) => physicalDeff + extra_physicalDeff * lvl;
+    public int GetSpecialDeff(int lvl) => specialDeff + extra_specialDeff * lvl;
+    public int GetVelocity(int lvl) => velocity + extra_velocity * lvl;
 }
 
 [Serializable]
