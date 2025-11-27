@@ -6,10 +6,17 @@ using UnityEngine.UI;
 
 public class PC_Manager : MonoBehaviour
 {
+    public static PC_Manager instance;
+    private void Awake()
+    {
+        instance = this;
+    }
+
+
     public Image pkm_portrait;
     public TextMeshProUGUI lvl;
     public TextMeshProUGUI[] stats;
-    int selected_pkm;
+    StoredPokemon selected_pkm;
 
     public Transform move_spawn;
     public GameObject move_button_pf;
@@ -17,9 +24,27 @@ public class PC_Manager : MonoBehaviour
 
     public Button addButton;
 
-    public void ShowPKMDetails(StoredPokemon pkm, int idx)
+    public PokemonsManager pkm_manager;
+    public List<GameObject> pc_pokemons = new List<GameObject>();
+    public GameObject pc_pkm_pf;
+    public Transform pc_pkm_spwn;
+
+    public void ShowPokemonList()
     {
-        selected_pkm = idx;
+        List<StoredPokemon> pkmList = pkm_manager.my_pokemons;
+        
+        for (int i = 0; i < pkmList.Count; i++)
+        {
+            if (i >= pc_pokemons.Count) pc_pokemons.Add(Instantiate(pc_pkm_pf, pc_pkm_spwn));
+            pc_pokemons[i].SetActive(true);
+            pc_pokemons[i].GetComponent<PC_PKM_Button>().SetPKMButton(pkmList[i]);
+
+        }
+    }
+
+    public void ShowPKMDetails(StoredPokemon pkm)
+    {
+        selected_pkm = pkm;
         pkm_portrait.sprite = pkm.pokemon.portrait;
         lvl.text = pkm.current_lvl.ToString();
         stats[0].text = pkm.pokemon.GetHealth(pkm.current_lvl).ToString();
@@ -49,20 +74,21 @@ public class PC_Manager : MonoBehaviour
         addButton.interactable = !pkm.equiped;
     }
 
-    public void EquipPokemon(int idx)
+    public void EquipPokemon(int team_pos)
     {
-        PokemonsManager.Instantiate.
+        pkm_manager.EquipPokemon(selected_pkm.captured_number, team_pos);
     }
 
-    public void EquipMove()
+    public void EquipMove(MoveData new_move)
     {
-
+        pkm_manager.EquipMove(selected_pkm.captured_number, new_move);
     }
 
-    public void UnequipMove()
+    public void UnequipMove(MoveData old_move)
     {
-
+        pkm_manager.UnequipMove(selected_pkm.captured_number, old_move);
     }
+
 
 
     public Transform showTeam_pos;

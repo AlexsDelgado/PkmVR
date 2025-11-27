@@ -5,6 +5,8 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "MoveData", menuName = "GameData/Move")]
 public class MoveData : ScriptableObject
 {
+    [Header("Info")]
+    public int ID;
     [SerializeField] TypeData type;
     [SerializeField] bool specialType;
 

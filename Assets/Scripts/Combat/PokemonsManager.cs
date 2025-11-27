@@ -12,9 +12,7 @@ public class PokemonsManager : MonoBehaviour
     }
         
     [SerializeField] StoredPokemon[] equiped_pokemons;
-    List<StoredPokemon> my_pokemons = new List<StoredPokemon>();
-
-    public List<GameObject> pc_pokemons = new List<GameObject>();
+    public List<StoredPokemon> my_pokemons = new List<StoredPokemon>();
 
     public void AddNewPokemon(PokemonData my_pokemon, int lvl, MoveData[] moves)
     {
@@ -27,17 +25,16 @@ public class PokemonsManager : MonoBehaviour
         my_pokemons[pkm_idx].equiped = true;
     }
 
-    public void GeneratePokemonPCList()
+    public void EquipMove(int pkm_idx, MoveData new_move)
     {
-        for (int i = 0; i < my_pokemons.Count; i++)
-        {
-            if (i < pc_pokemons.Count)
-            {
-                //pc_pokemons[i].
-            }
-            
-        }
+        my_pokemons[pkm_idx].EquipMove(new_move);
     }
+
+    public void UnequipMove(int pkm_idx, MoveData old_move)
+    {
+        my_pokemons[pkm_idx].UnequipMove(old_move);
+    }
+
 }
 
 [Serializable]
@@ -60,5 +57,32 @@ public class StoredPokemon
         active_moves = moves;
         captured_number = captured_num;
         equiped = is_equiped;
+    }
+
+    public void UpdateMoves(MoveData[] moves)
+    {
+        active_moves = moves;
+    }
+    public void EquipMove(MoveData new_move)
+    {
+        for (int i = 0; i < 4; i++)
+        {
+            if (active_moves[i] == null)
+            {
+                active_moves[i] = new_move;
+                return;
+            }
+        }
+    }
+    public void UnequipMove(MoveData old_move)
+    {
+        for (int i = 0; i < 4; i++)
+        {
+            if (active_moves[i].ID == old_move.ID)
+            {
+                active_moves[i] = null;
+                return;
+            }
+        }
     }
 }
