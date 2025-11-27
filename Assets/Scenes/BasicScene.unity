@@ -2376,14 +2376,14 @@ MonoBehaviour:
   initOnAwake: 0
   useGpu: 1
   flashAttention: 0
-  language: es
+  language: en
   translateToEnglish: 0
   strategy: 0
   noContext: 1
   singleSegment: 0
   enableTokens: 0
   initialPrompt: 
-  stepSec: 0.5
+  stepSec: 0.7
   keepSec: 0
   lengthSec: 2
   updatePrompt: 0
@@ -2452,7 +2452,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   maxLengthSec: 60
   loop: 0
-  frequency: 48000
+  frequency: 16000
   chunksLengthSec: 0.5
   echo: 1
   useVad: 1
