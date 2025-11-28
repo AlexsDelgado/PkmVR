@@ -28,4 +28,10 @@ public class PokemonController : MonoBehaviour
         else PoolManager.I.Despawn(poolKey, gameObject);
     }
     public void Despawn() => DespawnFXThenReturn();
+
+    /// <summary>
+    /// Obtiene la clave del pool de este pokemon
+    /// </summary>
+    public string GetPoolKey() => poolKey;
+    //ok
 }

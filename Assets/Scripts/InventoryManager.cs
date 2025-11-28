@@ -1,4 +1,18 @@
+using System.Collections.Generic;
 using UnityEngine;
+
+[System.Serializable]
+public class CapturedPokemon
+{
+    public string speciesPoolKey; // Clave del pool del pokemon (ej: "Squirtle")
+    public PokemonData pokemonData; // Datos del pokemon (opcional, para stats, etc)
+    
+    public CapturedPokemon(string poolKey, PokemonData data = null)
+    {
+        speciesPoolKey = poolKey;
+        pokemonData = data;
+    }
+}
 
 public class InventoryManager : MonoBehaviour
 {
@@ -9,10 +23,15 @@ public class InventoryManager : MonoBehaviour
     [SerializeField] private int pokeballs = 0;
     [SerializeField] private int potions = 0;
 
+    [Header("Equipo de Pokemons")]
+    [SerializeField] private List<CapturedPokemon> capturedPokemons = new List<CapturedPokemon>();
+    private const int MAX_TEAM_SIZE = 6;
+
     // Eventos para notificar cambios (opcional, útil para UI)
     public System.Action<int> OnMoneyChanged;
     public System.Action<int> OnPokeballsChanged;
     public System.Action<int> OnPotionsChanged;
+    public System.Action OnTeamChanged;
 
     void Awake()
     {
@@ -64,6 +83,58 @@ public class InventoryManager : MonoBehaviour
         money += amount;
         OnMoneyChanged?.Invoke(money);
         Debug.Log($"Dinero agregado: {amount}. Total: {money}");
+    }
+
+    // Métodos para gastar pokeballs
+    public bool SpendPokeball()
+    {
+        if (pokeballs > 0)
+        {
+            pokeballs--;
+            OnPokeballsChanged?.Invoke(pokeballs);
+            Debug.Log($"Pokeball gastada. Restantes: {pokeballs}");
+            return true;
+        }
+        Debug.LogWarning("No hay pokeballs disponibles");
+        return false;
+    }
+
+    // Métodos para manejar pokemons capturados
+    public List<CapturedPokemon> GetCapturedPokemons() => new List<CapturedPokemon>(capturedPokemons);
+    
+    public int GetCapturedPokemonCount() => capturedPokemons.Count;
+    
+    public bool AddCapturedPokemon(string speciesPoolKey, PokemonData pokemonData = null)
+    {
+        if (capturedPokemons.Count >= MAX_TEAM_SIZE)
+        {
+            Debug.LogWarning($"Equipo lleno. Máximo: {MAX_TEAM_SIZE}");
+            return false;
+        }
+        
+        capturedPokemons.Add(new CapturedPokemon(speciesPoolKey, pokemonData));
+        OnTeamChanged?.Invoke();
+        Debug.Log($"Pokemon capturado agregado al equipo: {speciesPoolKey}. Total: {capturedPokemons.Count}");
+        return true;
+    }
+    
+    public CapturedPokemon GetPokemonAt(int index)
+    {
+        if (index >= 0 && index < capturedPokemons.Count)
+            return capturedPokemons[index];
+        return null;
+    }
+    
+    public bool RemovePokemonAt(int index)
+    {
+        if (index >= 0 && index < capturedPokemons.Count)
+        {
+            capturedPokemons.RemoveAt(index);
+            OnTeamChanged?.Invoke();
+            Debug.Log($"Pokemon removido del equipo en índice {index}");
+            return true;
+        }
+        return false;
     }
 }
 

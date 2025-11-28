@@ -6,20 +6,21 @@ public class BuyInteractorButton : XRSimpleInteractable
     [Header("Referencias")]
     [SerializeField] private BuyBox buyBox;
 
-    protected override void Awake()
-    {
-        base.Awake();
+//    protected override void Awake()
+  //  {
+    //    base.Awake();
         
         // Si no se asignó la caja en el inspector, intentar encontrarla
-        if (buyBox == null)
-        {
-            buyBox = FindObjectOfType<BuyBox>();
-            if (buyBox == null)
-            {
-                Debug.LogWarning("BuyBox no encontrado. Asigna la referencia en el inspector.", this);
-            }
-        }
-    }
+      //  if (buyBox == null)
+        //{
+          //  buyBox = FindObjectOfType<BuyBox>();
+            //if (buyBox == null)
+            //{
+              //  Debug.LogWarning("BuyBox no encontrado. Asigna la referencia en el inspector.", this);
+            //}
+        //}
+    //}
+    
 
     protected override void OnEnable()
     {
