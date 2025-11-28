@@ -854,6 +854,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 244437389}
+  - component: {fileID: 244437391}
   - component: {fileID: 244437390}
   m_Layer: 5
   m_Name: Content
@@ -878,8 +879,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: 0.00046415464}
-  m_SizeDelta: {x: 0, y: 325}
+  m_AnchoredPosition: {x: 0, y: 0.000030517578}
+  m_SizeDelta: {x: 0, y: 300}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &244437390
 MonoBehaviour:
@@ -890,23 +891,35 @@ MonoBehaviour:
   m_GameObject: {fileID: 244437388}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 59f8146938fff824cb5fd77236b75775, type: 3}
+  m_Script: {fileID: 11500000, guid: 3245ec927659c4140ac4f8d17403cc18, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_HorizontalFit: 2
+  m_VerticalFit: 0
+--- !u!114 &244437391
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 244437388}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8a8695521f0d02e499659fee002a26c2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   m_Padding:
-    m_Left: 0
-    m_Right: 0
-    m_Top: 0
+    m_Left: 10
+    m_Right: 10
+    m_Top: 10
     m_Bottom: 0
   m_ChildAlignment: 0
-  m_Spacing: 0
-  m_ChildForceExpandWidth: 1
-  m_ChildForceExpandHeight: 1
-  m_ChildControlWidth: 0
-  m_ChildControlHeight: 0
-  m_ChildScaleWidth: 0
-  m_ChildScaleHeight: 0
-  m_ReverseArrangement: 0
+  m_StartCorner: 0
+  m_StartAxis: 0
+  m_CellSize: {x: 220, y: 100}
+  m_Spacing: {x: 10, y: 10}
+  m_Constraint: 1
+  m_ConstraintCount: 2
 --- !u!1001 &266504838
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2170,6 +2183,41 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
+--- !u!1 &590340909
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 590340910}
+  m_Layer: 5
+  m_Name: Show_pos
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &590340910
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 590340909}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1815962110}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 335.99997, y: 0}
+  m_SizeDelta: {x: 100, y: 100}
+  m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1001 &600407168
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2488,6 +2536,7 @@ GameObject:
   m_Component:
   - component: {fileID: 796323717}
   - component: {fileID: 796323718}
+  - component: {fileID: 796323719}
   m_Layer: 5
   m_Name: Content
   m_TagString: Untagged
@@ -2511,7 +2560,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: 0.00012066715}
+  m_AnchoredPosition: {x: 0, y: 0.0008217251}
   m_SizeDelta: {x: 0, y: 700}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &796323718
@@ -2527,17 +2576,31 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Padding:
-    m_Left: 0
-    m_Right: 0
-    m_Top: 0
-    m_Bottom: 0
+    m_Left: 10
+    m_Right: 10
+    m_Top: 10
+    m_Bottom: 10
   m_ChildAlignment: 0
   m_StartCorner: 0
   m_StartAxis: 0
-  m_CellSize: {x: 166, y: 233}
-  m_Spacing: {x: 0, y: 0}
-  m_Constraint: 0
-  m_ConstraintCount: 2
+  m_CellSize: {x: 150, y: 150}
+  m_Spacing: {x: 10, y: 10}
+  m_Constraint: 1
+  m_ConstraintCount: 3
+--- !u!114 &796323719
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 796323716}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3245ec927659c4140ac4f8d17403cc18, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_HorizontalFit: 0
+  m_VerticalFit: 0
 --- !u!1 &814403670
 GameObject:
   m_ObjectHideFlags: 0
@@ -2574,7 +2637,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 650, y: 0}
+  m_AnchoredPosition: {x: 650.0001, y: 0}
   m_SizeDelta: {x: 300, y: 700}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &814403672
@@ -4190,7 +4253,7 @@ MonoBehaviour:
   m_HandleRect: {fileID: 1810457031}
   m_Direction: 2
   m_Value: 0
-  m_Size: 0.9999957
+  m_Size: 1
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -4879,6 +4942,70 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1.0000001, y: 2, z: 1.0000002}
   m_Center: {x: 0.00000005960464, y: 0, z: -0.00000008940697}
+--- !u!1 &1203542433
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1203542436}
+  - component: {fileID: 1203542435}
+  - component: {fileID: 1203542434}
+  m_Layer: 0
+  m_Name: PokemonManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1203542434
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1203542433}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c8d065213647fd34db3e8bef36eb9857, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  my_spawn: {fileID: 0}
+  enemy_spawn: {fileID: 0}
+  enemy_pkm_spawn: {fileID: 0}
+--- !u!114 &1203542435
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1203542433}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 45b4400e941431c4b9b2abbbe664bfbc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  equiped_pokemons: []
+  my_pokemons: []
+  exp_to_lvl_up_base: 0
+  extra_exp_per_lvl: 0
+--- !u!4 &1203542436
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1203542433}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 6.153841, y: -8.086089, z: -15.850728}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1234734721
 GameObject:
   m_ObjectHideFlags: 0
@@ -4962,7 +5089,7 @@ MonoBehaviour:
   m_HandleRect: {fileID: 2020314131}
   m_Direction: 2
   m_Value: 0
-  m_Size: 0.99999815
+  m_Size: 0.99999994
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -5340,6 +5467,41 @@ Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: d4267466970ddd7468296aacae28c883, type: 3}
   m_PrefabInstance: {fileID: 1257710612}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &1287814100
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1287814101}
+  m_Layer: 5
+  m_Name: HidePos
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &1287814101
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1287814100}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1815962110}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 650.0001, y: 0}
+  m_SizeDelta: {x: 100, y: 100}
+  m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1001 &1297830477
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -6273,6 +6435,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5ca4375329396a94a8b39fcb04120f2c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isTrigger: 1
 --- !u!1001 &1457147617
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -7750,6 +7913,8 @@ RectTransform:
   - {fileID: 1388831286}
   - {fileID: 1480390437}
   - {fileID: 814403671}
+  - {fileID: 590340910}
+  - {fileID: 1287814101}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: -180, z: 0}
   m_AnchorMin: {x: 0, y: 0}
@@ -7772,22 +7937,22 @@ MonoBehaviour:
   pkm_portrait: {fileID: 1885187280}
   lvl: {fileID: 107755018}
   stats:
+  - {fileID: 913664411}
   - {fileID: 1311404802}
   - {fileID: 1042877917}
   - {fileID: 588093837}
   - {fileID: 731224916}
   - {fileID: 912839534}
-  - {fileID: 913664411}
   move_spawn: {fileID: 244437389}
-  move_button_pf: {fileID: 0}
+  move_button_pf: {fileID: 5067517454801579325, guid: 6f948e5830ce4244aa0142b56daae5e3, type: 3}
   move_list: []
   addButton: {fileID: 476720135}
-  pkm_manager: {fileID: 0}
+  pkm_manager: {fileID: 1203542435}
   pc_pokemons: []
-  pc_pkm_pf: {fileID: 0}
-  pc_pkm_spwn: {fileID: 0}
-  showTeam_pos: {fileID: 0}
-  hideTeam_pos: {fileID: 0}
+  pc_pkm_pf: {fileID: 6748364494181420692, guid: 9cb758c3f14437f48b74c7d727469618, type: 3}
+  pc_pkm_spwn: {fileID: 796323717}
+  showTeam_pos: {fileID: 590340910}
+  hideTeam_pos: {fileID: 1287814101}
   animationSpeed: 5
 --- !u!1001 &1833917065
 PrefabInstance:
@@ -9923,3 +10088,4 @@ SceneRoots:
   - {fileID: 1060460185}
   - {fileID: 600407168}
   - {fileID: 1815962110}
+  - {fileID: 1203542436}

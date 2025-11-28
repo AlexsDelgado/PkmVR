@@ -63,6 +63,7 @@ public class StoredPokemon
     public int current_lvl;
     int current_exp;
     public MoveData[] active_moves;
+    public int equiped_moves_ammount;
     public bool equiped;
     public int captured_number;
 
@@ -77,6 +78,14 @@ public class StoredPokemon
         equiped = is_equiped;
     }
 
+    public bool IsMoveEquiped(MoveData move)
+    {
+        foreach (MoveData m in active_moves)
+        {
+            if (m.ID == move.ID) return true;
+        }
+        return false;
+    }
     public void UpdateMoves(MoveData[] moves)
         {
             active_moves = moves;

@@ -29,6 +29,7 @@ public class PC_Manager : MonoBehaviour
     public GameObject pc_pkm_pf;
     public Transform pc_pkm_spwn;
 
+    public int Used_move_slots => selected_pkm.equiped_moves_ammount;
     public void ShowPokemonList()
     {
         List<StoredPokemon> pkmList = pkm_manager.my_pokemons;
@@ -50,13 +51,13 @@ public class PC_Manager : MonoBehaviour
     {
         selected_pkm = pkm;
         pkm_portrait.sprite = pkm.pokemon.portrait;
-        lvl.text = pkm.current_lvl.ToString();
-        stats[0].text = pkm.pokemon.GetHealth(pkm.current_lvl).ToString();
-        stats[1].text = pkm.pokemon.GetPhysicalDMG(pkm.current_lvl).ToString();
-        stats[2].text = pkm.pokemon.GetSpecialDMG(pkm.current_lvl).ToString();
-        stats[3].text = pkm.pokemon.GetPhysicalDeff(pkm.current_lvl).ToString();
-        stats[4].text = pkm.pokemon.GetSpecialDeff(pkm.current_lvl).ToString();
-        stats[5].text = pkm.pokemon.GetVelocity(pkm.current_lvl).ToString();
+        lvl.text      = "Lv. "  + pkm.current_lvl.ToString();
+        stats[0].text = "Hp: "  + pkm.pokemon.GetHealth(pkm.current_lvl).ToString();
+        stats[1].text = "Atk: " + pkm.pokemon.GetPhysicalDMG(pkm.current_lvl).ToString();
+        stats[2].text = "SpA: " + pkm.pokemon.GetSpecialDMG(pkm.current_lvl).ToString();
+        stats[3].text = "Def: " + pkm.pokemon.GetPhysicalDeff(pkm.current_lvl).ToString();
+        stats[4].text = "SpD: " + pkm.pokemon.GetSpecialDeff(pkm.current_lvl).ToString();
+        stats[5].text = "Spe: " + pkm.pokemon.GetVelocity(pkm.current_lvl).ToString();
 
         Move move = new Move();
         PC_Move_Button pC_Move_Button = new PC_Move_Button();
@@ -66,7 +67,7 @@ public class PC_Manager : MonoBehaviour
             if (i >= move_list.Count) move_list.Add(Instantiate(move_button_pf, move_spawn));   //controla pool obj
             move_list[i].SetActive(true);
             pC_Move_Button = move_list[i].GetComponent<PC_Move_Button>();
-            pC_Move_Button.SetMove(move.my_move.name, i);
+            pC_Move_Button.SetMove(move.my_move, i, pkm.IsMoveEquiped(move.my_move));
 
             pC_Move_Button.my_button.interactable = pkm.current_lvl >= move.min_lvl;
         }

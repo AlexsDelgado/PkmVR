@@ -72,7 +72,7 @@ public class CombatManager : MonoBehaviour
     void CommandAttack(int idx)
     {
         int dmg = my_avtive_pokemon.DoDamage(my_avtive_pokemon.moves[idx].dmg_ammount, my_avtive_pokemon.moves[idx].dmg_type);
-        if (enemy_pokemon.GetDamage(dmg, my_avtive_pokemon.moves[idx].dmg_type))
+        if (enemy_pokemon.GetDamage(dmg, my_avtive_pokemon.moves[idx].dmg_type, my_avtive_pokemon.moves[idx].move_type))
         {
             // Muerte del pkm enemigo
             NextEnemyPKM();
