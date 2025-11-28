@@ -10,6 +10,10 @@ public class PokemonsManager : MonoBehaviour
     {
         Instance = this;
     }
+    private void Start()
+    {
+        PC_Manager.instance.ShowPokemonList();
+    }
 
     [Header("Pokemons")]
     [SerializeField] StoredPokemon[] equiped_pokemons;

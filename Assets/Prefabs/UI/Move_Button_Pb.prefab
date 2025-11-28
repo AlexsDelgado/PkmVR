@@ -273,3 +273,5 @@ MonoBehaviour:
   my_txt: {fileID: 6415346689117163166}
   idx: 0
   my_button: {fileID: 3507881617541950488}
+  my_image: {fileID: 701742021128429737}
+  equiped_move: {r: 0, g: 0, b: 0, a: 0}

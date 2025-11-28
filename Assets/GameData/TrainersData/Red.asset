@@ -18,17 +18,23 @@ MonoBehaviour:
   pokemons:
   - pokemon: {fileID: 11400000, guid: 20af0fba56427c2469a047f0fe78a7c5, type: 2}
     current_lvl: 2
-    active_moves: []
+    active_moves:
+    - {fileID: 11400000, guid: 94207203fd0a3414ba7f889d706d293a, type: 2}
+    equiped_moves_ammount: 1
     equiped: 0
     captured_number: 0
   - pokemon: {fileID: 11400000, guid: 20af0fba56427c2469a047f0fe78a7c5, type: 2}
-    current_lvl: 0
-    active_moves: []
+    current_lvl: 3
+    active_moves:
+    - {fileID: 11400000, guid: 94207203fd0a3414ba7f889d706d293a, type: 2}
+    equiped_moves_ammount: 1
     equiped: 0
     captured_number: 0
   - pokemon: {fileID: 11400000, guid: 20af0fba56427c2469a047f0fe78a7c5, type: 2}
-    current_lvl: 0
-    active_moves: []
+    current_lvl: 5
+    active_moves:
+    - {fileID: 11400000, guid: 94207203fd0a3414ba7f889d706d293a, type: 2}
+    equiped_moves_ammount: 1
     equiped: 0
     captured_number: 0
   exp: 5

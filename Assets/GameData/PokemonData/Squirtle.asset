@@ -12,20 +12,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 61237c23a8278b14fb59d3a97ba329f6, type: 3}
   m_Name: Squirtle
   m_EditorClassIdentifier: 
+  portrait: {fileID: 21300000, guid: a6e9e9736379c164e81fdfd2c806a91c, type: 3}
+  model_pf: {fileID: 7109459304062473910, guid: 0b7893bb320e80c448f98960c3ec0883, type: 3}
   type1: {fileID: 11400000, guid: 12905381c78f2cf49becedb093b3afc2, type: 2}
-  type2: {fileID: 0}
-  maxHP: 0
-  physicalDMG: 0
-  specialDMG: 0
-  physicalDeff: 0
-  specialDeff: 0
-  velocity: 0
-  extra_maxHP: 0
-  extra_physicalDMG: 0
-  extra_specialDMG: 0
-  extra_physicalDeff: 0
-  extra_specialDeff: 0
-  extra_velocity: 0
+  maxHP: 50
+  physicalDMG: 3
+  specialDMG: 5
+  physicalDeff: 2
+  specialDeff: 2
+  velocity: 3
+  extra_maxHP: 5
+  extra_physicalDMG: 1
+  extra_specialDMG: 2
+  extra_physicalDeff: 1
+  extra_specialDeff: 1
+  extra_velocity: 2
   moveList:
   - my_move: {fileID: 11400000, guid: 94207203fd0a3414ba7f889d706d293a, type: 2}
     min_lvl: 0

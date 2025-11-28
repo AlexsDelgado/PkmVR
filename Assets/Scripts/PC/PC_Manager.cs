@@ -94,10 +94,10 @@ public class PC_Manager : MonoBehaviour
         pkm_manager.UnequipMove(selected_pkm.captured_number, old_move);
     }
 
-
-
-    public Transform showTeam_pos;
-    public Transform hideTeam_pos;
+    [Header("PC Team")]
+    public RectTransform teamUI;
+    public RectTransform showTeam_pos;
+    public RectTransform hideTeam_pos;
     public float animationSpeed = 5;
 
     public void ShowTeamCoroutine()
@@ -111,23 +111,25 @@ public class PC_Manager : MonoBehaviour
 
     public IEnumerator ShowTeam()
     {
-        Vector3 dir = new Vector3(-1, 0, 0);
-        while (transform.position.x > showTeam_pos.position.x)
+        Vector2 dir = new Vector2(-1, 0);
+        while (teamUI.position.x > showTeam_pos.position.x)
         {
-            transform.Translate(dir * animationSpeed);
+            // teamUI.anchoredPosition += dir * animationSpeed * Time.deltaTime;
+            teamUI.Translate(dir * animationSpeed * Time.deltaTime);
             yield return new WaitForEndOfFrame();
         }
-        transform.position = showTeam_pos.position;
+        teamUI.position = showTeam_pos.position;
     }
 
     public IEnumerator HideTeam()
     {
-        Vector3 dir = new Vector3(1, 0, 0);
-        while (transform.position.x < hideTeam_pos.position.x)
+        Vector2 dir = new Vector2(1, 0);
+        while (teamUI.position.x < hideTeam_pos.position.x)
         {
-            transform.Translate(dir * animationSpeed);
+            // teamUI.anchoredPosition += dir * animationSpeed * Time.deltaTime;
+            teamUI.Translate(dir * animationSpeed * Time.deltaTime);
             yield return new WaitForEndOfFrame();
         }
-        transform.position = hideTeam_pos.position;
+        teamUI.position = hideTeam_pos.position;
     }
 }
