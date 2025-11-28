@@ -878,7 +878,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0.00046415464}
   m_SizeDelta: {x: 0, y: 325}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &244437390
@@ -2511,7 +2511,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0.00012066715}
   m_SizeDelta: {x: 0, y: 700}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &796323718
@@ -3875,7 +3875,7 @@ GameObject:
   - component: {fileID: 1060460187}
   - component: {fileID: 1060460186}
   m_Layer: 0
-  m_Name: Whisper
+  m_Name: WhisperManager
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3900,7 +3900,7 @@ MonoBehaviour:
   useGpu: 1
   flashAttention: 0
   language: en
-  translateToEnglish: 0
+  translateToEnglish: 1
   strategy: 0
   noContext: 1
   singleSegment: 0
@@ -4190,7 +4190,7 @@ MonoBehaviour:
   m_HandleRect: {fileID: 1810457031}
   m_Direction: 2
   m_Value: 0
-  m_Size: 1
+  m_Size: 0.9999957
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -4962,7 +4962,7 @@ MonoBehaviour:
   m_HandleRect: {fileID: 2020314131}
   m_Direction: 2
   m_Value: 0
-  m_Size: 0.99999994
+  m_Size: 0.99999815
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
