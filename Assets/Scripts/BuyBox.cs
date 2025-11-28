@@ -103,6 +103,15 @@ public class BuyBox : MonoBehaviour
 
         Debug.Log($"Compra exitosa! Costo: {totalCost}, Pokeballs: +{pokeballsToAdd}, Pociones: +{potionsToAdd}");
         
+        // Mover todos los items a su posición original antes de limpiar la lista
+        foreach (var item in itemsInBox)
+        {
+            if (item != null)
+            {
+                item.ReturnToOriginalPosition();
+            }
+        }
+        
         // Limpiar la lista después de la compra exitosa
         itemsInBox.Clear();
         
