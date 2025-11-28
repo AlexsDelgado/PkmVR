@@ -99,6 +99,16 @@ public class PC_Manager : MonoBehaviour
     public Transform showTeam_pos;
     public Transform hideTeam_pos;
     public float animationSpeed = 5;
+
+    public void ShowTeamCoroutine()
+    {
+        StartCoroutine(ShowTeam());
+    }
+    public void HideTeamCoroutine()
+    {
+        StartCoroutine(HideTeam());
+    }
+
     public IEnumerator ShowTeam()
     {
         Vector3 dir = new Vector3(-1, 0, 0);
