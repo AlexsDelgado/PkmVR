@@ -33,6 +33,12 @@ public class PokemonSpawnZone : MonoBehaviour
     [Header("Spawn Zone")]
     [SerializeField] private BoxCollider spawnZone;
 
+    [Header("Ground")]
+    [SerializeField] private LayerMask groundMask;   // set to your "Ground" layer
+    [SerializeField] private float groundRayHeight = 3f;
+    [SerializeField] private float groundRayDistance = 10f;
+    [SerializeField] private float groundOffset = 0.02f; // tiny lift to avoid clipping
+
     private class ActivePokemon
     {
         public GameObject instance;
@@ -330,32 +336,33 @@ public class PokemonSpawnZone : MonoBehaviour
 
     private Vector3 GetRandomPointInZone()
     {
-        // If we have a dedicated spawn zone, use that
+        Bounds b;
+
         if (spawnZone != null)
         {
-            Bounds b = spawnZone.bounds;
-            float x = Random.Range(b.min.x, b.max.x);
-            float z = Random.Range(b.min.z, b.max.z);
-            return new Vector3(x, b.center.y, z);
+            b = spawnZone.bounds;
         }
-
-        // Fallback: use the full trigger collider
-        if (!zoneCollider)
-            return transform.position;
-
-        if (zoneCollider is BoxCollider box)
+        else if (zoneCollider is BoxCollider box)
         {
-            Bounds b = box.bounds;
-            float x = Random.Range(b.min.x, b.max.x);
-            float z = Random.Range(b.min.z, b.max.z);
-            return new Vector3(x, b.center.y, z);
+            b = box.bounds;
+        }
+        else
+        {
+            b = zoneCollider.bounds;
         }
 
-        Bounds bounds = zoneCollider.bounds;
-        return new Vector3(
-            Random.Range(bounds.min.x, bounds.max.x),
-            bounds.center.y,
-            Random.Range(bounds.min.z, bounds.max.z)
-        );
+        float x = Random.Range(b.min.x, b.max.x);
+        float z = Random.Range(b.min.z, b.max.z);
+
+        // Start ray above the zone and cast down to find the ground
+        Vector3 rayStart = new Vector3(x, b.max.y + groundRayHeight, z);
+        Vector3 pos = new Vector3(x, b.center.y, z); // fallback
+
+        if (Physics.Raycast(rayStart, Vector3.down, out var hit, groundRayDistance, groundMask, QueryTriggerInteraction.Ignore))
+        {
+            pos = hit.point + Vector3.up * groundOffset;
+        }
+
+        return pos;
     }
 }

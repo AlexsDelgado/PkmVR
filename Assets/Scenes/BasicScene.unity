@@ -324,6 +324,12 @@ MonoBehaviour:
   playerTarget: {fileID: 495400599}
   monitorIntervalSeconds: 1
   spawnZone: {fileID: 1255533427}
+  groundMask:
+    serializedVersion: 2
+    m_Bits: 512
+  groundRayHeight: 3
+  groundRayDistance: 10
+  groundOffset: 0.02
 --- !u!65 &69251294
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -379,7 +385,7 @@ GameObject:
   - component: {fileID: 101289239}
   - component: {fileID: 101289238}
   - component: {fileID: 101289237}
-  m_Layer: 0
+  m_Layer: 13
   m_Name: Cube (5)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3106,7 +3112,7 @@ GameObject:
   - component: {fileID: 849509476}
   - component: {fileID: 849509475}
   - component: {fileID: 849509474}
-  m_Layer: 0
+  m_Layer: 13
   m_Name: Cube (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -5001,7 +5007,7 @@ GameObject:
   - component: {fileID: 1176745209}
   - component: {fileID: 1176745208}
   - component: {fileID: 1176745207}
-  m_Layer: 0
+  m_Layer: 13
   m_Name: Cube
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -5585,8 +5591,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 17.321964, y: 7.6546164, z: 33.246002}
-  m_Center: {x: -0.021905899, y: 3.752727, z: -0.8862343}
+  m_Size: {x: 17.321964, y: 1.03, z: 33.246002}
+  m_Center: {x: -0.021905899, y: -0.074581385, z: -0.8862343}
 --- !u!4 &1255533428
 Transform:
   m_ObjectHideFlags: 0
@@ -5596,7 +5602,7 @@ Transform:
   m_GameObject: {fileID: 1255533426}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -3.09, y: 30.57, z: 21.5}
+  m_LocalPosition: {x: -3.09, y: 31.38, z: 21.5}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -7470,7 +7476,7 @@ GameObject:
   - component: {fileID: 1667397855}
   - component: {fileID: 1667397854}
   - component: {fileID: 1667397853}
-  m_Layer: 0
+  m_Layer: 13
   m_Name: Cube (2)
   m_TagString: Untagged
   m_Icon: {fileID: 0}

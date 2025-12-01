@@ -38,6 +38,11 @@ public class RoamingPokemon : MonoBehaviour
     [SerializeField] private string walkBoolName = "IsWalking";
     [SerializeField] private string intimidateTriggerName = "Intimidate";
 
+    [Header("Obstacles")]
+    [SerializeField] private LayerMask obstacleMask;    // walls, rocks, etc.
+    [SerializeField] private float obstacleRayHeight = 0.5f;
+    [SerializeField] private float obstacleSkin = 0.05f;
+
     // Animator hashes to avoid string lookups every call
     private int walkBoolHash;
     private int intimidateTriggerHash;
@@ -165,7 +170,28 @@ public class RoamingPokemon : MonoBehaviour
                 t -= dt;
 
                 // Move
-                transform.position += dir * (walkSpeed * dt);
+                float step = walkSpeed * dt;
+
+                // Ray from a small height on the model root
+                Vector3 rayOrigin = modelRoot.position + Vector3.up * obstacleRayHeight;
+
+                bool blocked = Physics.Raycast(
+                    rayOrigin,
+                    dir,
+                    step + obstacleSkin,
+                    obstacleMask,
+                    QueryTriggerInteraction.Ignore
+                );
+
+                if (!blocked)
+                {
+                    transform.position += dir * step;
+                }
+                else
+                {
+                    // Hit a wall: stop this walk early so we choose a new dir next time
+                    t = 0f;
+                }
 
                 // LoS check
                 losTimer -= dt;
