@@ -6840,11 +6840,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   money: 1000
-  pokeballs: 0
+  pokeballs: 5
   potions: 0
-  capturedPokemons:
-  - speciesPoolKey: Squirtle
-    pokemonData: {fileID: 11400000, guid: 20af0fba56427c2469a047f0fe78a7c5, type: 2}
+  capturedPokemons: []
 --- !u!4 &1161733732
 Transform:
   m_ObjectHideFlags: 0

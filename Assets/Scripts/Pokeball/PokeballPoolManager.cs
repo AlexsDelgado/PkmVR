@@ -1,190 +1,123 @@
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.XR.Interaction.Toolkit;
 
 public class PokeballPoolManager : MonoBehaviour
 {
-    [System.Serializable]
-    public class PokeballPool
-    {
-        public string key = "PokeballGrabInteractable";
-        public GameObject prefab;
-        public int prewarm = 10;
-    }
-
     public static PokeballPoolManager Instance { get; private set; }
 
-    [Header("Pool Configuration")]
-    [SerializeField] private PokeballPool poolConfig = new PokeballPool();
+    [Header("Pool Settings")]
+    [SerializeField] private PokeballGrabInteractable pokeballPrefab;
+    [SerializeField] private int prewarmCount = 10;
 
-    private Queue<PokeballGrabInteractable> availablePokeballs = new Queue<PokeballGrabInteractable>();
-    private List<PokeballGrabInteractable> activePokeballs = new List<PokeballGrabInteractable>();
-    private Dictionary<PokeballGrabInteractable, bool> pokeballStates = new Dictionary<PokeballGrabInteractable, bool>();
+    private readonly Queue<PokeballGrabInteractable> availablePokeballs = new Queue<PokeballGrabInteractable>();
+    private readonly HashSet<PokeballGrabInteractable> activePokeballs = new HashSet<PokeballGrabInteractable>();
 
-    void Awake()
+    private void Awake()
     {
         if (Instance != null && Instance != this)
         {
             Destroy(gameObject);
             return;
         }
+
         Instance = this;
 
-        // Precalentar el pool
-        PrewarmPool();
-    }
-
-    private void PrewarmPool()
-    {
-        if (poolConfig.prefab == null)
+        if (pokeballPrefab == null)
         {
-            Debug.LogError("PokeballPoolManager: Prefab no asignado", this);
+            Debug.LogError("PokeballPoolManager: pokeballPrefab is not assigned.", this);
             return;
         }
 
-        for (int i = 0; i < poolConfig.prewarm; i++)
-        {
-            var pokeball = CreatePokeball();
-            pokeball.gameObject.SetActive(false);
-            availablePokeballs.Enqueue(pokeball);
-        }
+        Prewarm();
     }
 
-    private PokeballGrabInteractable CreatePokeball()
+    private void Prewarm()
     {
-        var go = Instantiate(poolConfig.prefab);
-        var pokeball = go.GetComponent<PokeballGrabInteractable>();
-        
-        if (pokeball == null)
+        for (int i = 0; i < prewarmCount; i++)
         {
-            Debug.LogError("PokeballPoolManager: El prefab no tiene componente PokeballGrabInteractable", this);
-            Destroy(go);
-            return null;
+            var ball = Instantiate(pokeballPrefab, transform);
+            ball.gameObject.SetActive(false);
+            availablePokeballs.Enqueue(ball);
         }
-
-        return pokeball;
     }
 
-    /// <summary>
-    /// Obtiene una pokeball del pool (modo Empty)
-    /// </summary>
+    public void OnPokeballGrabbed()
+    {
+        // intentionally empty
+    }
+
+
+    // Get an Empty pokeball instance from the pool.
+
     public PokeballGrabInteractable GetEmptyPokeball()
     {
-        // Verificar si hay pokeballs en el inventario
-        if (InventoryManager.Instance == null || InventoryManager.Instance.GetPokeballs() <= 0)
-        {
-            Debug.Log("No hay pokeballs en el inventario");
+        if (pokeballPrefab == null)
             return null;
-        }
 
-        PokeballGrabInteractable pokeball;
+        PokeballGrabInteractable ball;
 
-        // Intentar obtener una del pool disponible
         if (availablePokeballs.Count > 0)
         {
-            pokeball = availablePokeballs.Dequeue();
+            ball = availablePokeballs.Dequeue();
         }
         else
         {
-            // Crear una nueva si no hay disponibles
-            pokeball = CreatePokeball();
+            ball = Instantiate(pokeballPrefab, transform);
         }
 
-        if (pokeball != null)
-        {
-            pokeball.SetMode(PokeballGrabInteractable.BallMode.Empty);
-            pokeball.gameObject.SetActive(true);
-            activePokeballs.Add(pokeball);
-            pokeballStates[pokeball] = true;
-        }
+        ball.SetMode(PokeballGrabInteractable.BallMode.Empty);
+        ball.SetAssignedSpecies(null);
+        ball.gameObject.SetActive(true);
 
-        return pokeball;
+        activePokeballs.Add(ball);
+        return ball;
     }
 
-    /// <summary>
-    /// Obtiene una pokeball del pool (modo Captured) con un pokemon asignado
-    /// </summary>
-    public PokeballGrabInteractable GetCapturedPokeball(string speciesPoolKey)
-    {
-        PokeballGrabInteractable pokeball;
+    // Return an Empty pokeball to the pool.
+    // Team balls (Full/Team) should never be returned here – they re-dock to the belt.
 
-        // Intentar obtener una del pool disponible
-        if (availablePokeballs.Count > 0)
-        {
-            pokeball = availablePokeballs.Dequeue();
-        }
-        else
-        {
-            // Crear una nueva si no hay disponibles
-            pokeball = CreatePokeball();
-        }
-
-        if (pokeball != null)
-        {
-            pokeball.SetMode(PokeballGrabInteractable.BallMode.Full);
-            pokeball.SetAssignedSpecies(speciesPoolKey);
-            pokeball.gameObject.SetActive(true);
-            activePokeballs.Add(pokeball);
-            pokeballStates[pokeball] = true;
-        }
-
-        return pokeball;
-    }
-
-    /// <summary>
-    /// Devuelve una pokeball al pool
-    /// </summary>
     public void ReturnPokeballToPool(PokeballGrabInteractable pokeball)
     {
-        if (pokeball == null) return;
+        if (pokeball == null)
+            return;
 
-        if (pokeball.GetMode() != BallMode.Empty)
+        // Only empties are meant to be pooled
+        if (pokeball.GetMode() != PokeballGrabInteractable.BallMode.Empty)
         {
-            Debug.LogWarning("Tried to return a non-empty team ball to pool – this should not happen.");
+            Debug.LogWarning("PokeballPoolManager: tried to return a non-empty ball to the pool. This ball should be managed by its belt socket instead.", pokeball);
             return;
         }
 
-        // Remover de la lista de activas
-        if (activePokeballs.Contains(pokeball))
+        if (!activePokeballs.Contains(pokeball))
         {
-            activePokeballs.Remove(pokeball);
+            // Already returned or not tracked, but we can still safely disable it
+            pokeball.gameObject.SetActive(false);
+            return;
         }
 
-        if (pokeballStates.ContainsKey(pokeball))
-        {
-            pokeballStates.Remove(pokeball);
-        }
+        activePokeballs.Remove(pokeball);
 
-        // Desactivar y devolver al pool
         pokeball.gameObject.SetActive(false);
-        pokeball.transform.SetParent(null);
-        
-        // Resetear estado
-        pokeball.SetMode(PokeballGrabInteractable.BallMode.Empty);
+        pokeball.transform.SetParent(transform, false);
         pokeball.SetAssignedSpecies(null);
 
         availablePokeballs.Enqueue(pokeball);
     }
 
-    /// <summary>
-    /// Se llama cuando se agarra una pokeball del socket 1
-    /// Los sockets ahora se auto-gestionan, así que este método ya no es necesario
-    /// pero se mantiene por compatibilidad
-    /// </summary>
-    public void OnPokeballGrabbed()
+
+    // Utility for team sockets: create a new team ball instance that is not managed by the pool.
+    // It starts disabled; caller should configure species/mode and position.
+
+    public PokeballGrabInteractable CreateTeamPokeball()
     {
-        // Los sockets ahora se refrescan automáticamente en OnSelectExited
-        // Este método se mantiene por compatibilidad pero no hace nada
+        if (pokeballPrefab == null)
+            return null;
+
+        var ball = Instantiate(pokeballPrefab);
+        ball.gameObject.SetActive(false);
+        return ball;
     }
 
-    /// <summary>
-    /// Obtiene la cantidad de pokeballs disponibles en el pool
-    /// </summary>
     public int GetAvailableCount() => availablePokeballs.Count;
-
-    /// <summary>
-    /// Obtiene la cantidad de pokeballs activas
-    /// </summary>
     public int GetActiveCount() => activePokeballs.Count;
 }
-
