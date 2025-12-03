@@ -4,55 +4,47 @@ using UnityEngine.XR.Interaction.Toolkit;
 
 public enum BeltSocketType
 {
-    EmptyPokeball,  // Socket 1 - siempre tiene una pokeball empty
-    TeamPokemon     // Sockets 2-7 - pokeballs captured según el equipo
+    EmptyPokeball,  // Socket 1 - always shows a generic empty ball
+    TeamPokemon     // Sockets 2-7 - team balls bound to party slots
 }
 
 public class PokeBeltSocketInteractor : XRSocketInteractor
 {
     [Header("Socket Configuration")]
     [SerializeField] private BeltSocketType socketType = BeltSocketType.EmptyPokeball;
-    [SerializeField] private Transform attachPoint; // Punto de attach para este socket específico
-    [SerializeField] private int teamIndex = 0; // Índice del pokemon en el equipo (0-5, solo para TeamPokemon)
+    [SerializeField] private Transform attachPoint;
+    [SerializeField] private int teamIndex = 0; // 0-5 for team slots
 
-    private PokeballPoolManager poolManager;    
+    [Header("Team Ball")]
+    [Tooltip("Prefab used for team balls (if left empty, will use PokeballPoolManager.CreateTeamPokeball).")]
+    [SerializeField] private PokeballGrabInteractable teamBallPrefab;
+
+    private PokeballPoolManager poolManager;
+    private PokeballGrabInteractable teamBall;
 
     protected override void Awake()
     {
         base.Awake();
-        
-        poolManager = PokeballPoolManager.Instance;
-        if (poolManager == null)
-        {
-            poolManager = FindObjectOfType<PokeballPoolManager>();
-        }
 
-        // Si no se asignó attach point, usar el transform del socket
+        poolManager = PokeballPoolManager.Instance ?? FindFirstObjectByType<PokeballPoolManager>();
+
         if (attachPoint == null)
-        {
             attachPoint = transform;
-        }
     }
 
-    protected override void Start()
+    private void OnEnable()
     {
-        base.Start();
-        
-        // Suscribirse a eventos del inventario
         if (InventoryManager.Instance != null)
         {
             InventoryManager.Instance.OnPokeballsChanged += OnPokeballsInventoryChanged;
             InventoryManager.Instance.OnTeamChanged += OnTeamChanged;
         }
-
-        // Inicializar el socket según su tipo
-        RefreshSocket();
     }
 
-    protected override void OnDestroy()
+    protected override void OnDisable()
     {
-        base.OnDestroy();
-        
+        base.OnDisable();
+
         if (InventoryManager.Instance != null)
         {
             InventoryManager.Instance.OnPokeballsChanged -= OnPokeballsInventoryChanged;
@@ -60,222 +52,180 @@ public class PokeBeltSocketInteractor : XRSocketInteractor
         }
     }
 
-    protected override void OnSelectExited(SelectExitEventArgs args)
+    private void Start()
     {
-        base.OnSelectExited(args);
-        
-        // Cuando se suelta una pokeball, esperar un frame y refrescar
-        StartCoroutine(RefreshSocketDelayed());
+        RefreshSocket();
     }
 
-    /// <summary>
-    /// Refresca el socket según su tipo
-    /// </summary>
-    public void RefreshSocket()
+    // ----------------------------------------------------------------------
+    // Refresh logic
+    // ----------------------------------------------------------------------
+
+    private void RefreshSocket()
     {
         if (socketType == BeltSocketType.EmptyPokeball)
-        {
             RefreshEmptySocket();
-        }
-        else if (socketType == BeltSocketType.TeamPokemon)
-        {
+        else
             RefreshTeamSocket();
-        }
     }
 
-    /// <summary>
-    /// Refresca el socket 1 (Empty Pokeball)
-    /// </summary>
     private void RefreshEmptySocket()
     {
-        // Si ya tiene una pokeball, no hacer nada
-        if (hasSelection) return;
+        var inv = InventoryManager.Instance;
+        if (inv == null || poolManager == null)
+            return;
 
-        // Verificar si hay pokeballs en el inventario
-        if (InventoryManager.Instance == null || InventoryManager.Instance.GetPokeballs() <= 0)
+        int count = inv.GetPokeballs();
+
+        // If no pokeballs left -> clear any selection
+        if (count <= 0)
         {
+            if (hasSelection && interactablesSelected.Count > 0)
+            {
+                var currentInteractable = interactablesSelected[0];
+                var mb = currentInteractable as MonoBehaviour;
+                var ball = mb ? mb.GetComponent<PokeballGrabInteractable>() : null;
+
+                if (ball != null)
+                {
+                    interactionManager?.SelectExit(this, currentInteractable);
+                    poolManager.ReturnPokeballToPool(ball);
+                }
+            }
             return;
         }
 
-        // Obtener una pokeball empty del pool
-        if (poolManager != null)
+        // We have pokeballs in inventory
+        if (hasSelection && interactablesSelected.Count > 0)
         {
-            var pokeball = poolManager.GetEmptyPokeball();
-            if (pokeball != null)
-            {
-                SetupPokeballInSocket(pokeball);
-            }
+            // assume current selection is already a proper Empty ball
+            return;
+        }
+
+        var newBall = poolManager.GetEmptyPokeball();
+        if (newBall == null)
+            return;
+
+        newBall.SetMode(PokeballGrabInteractable.BallMode.Empty);
+        newBall.SetAssignedSpecies(null);
+        newBall.SetBeltSocket(this);
+        newBall.SetBeltAttach(attachPoint);
+
+        newBall.transform.SetPositionAndRotation(attachPoint.position, attachPoint.rotation);
+
+        var interactable = newBall as IXRSelectInteractable;
+        if (interactionManager != null && interactable != null && CanSelect(interactable))
+        {
+            interactionManager.SelectEnter(this, interactable);
         }
     }
 
-    /// <summary>
-    /// Refresca un socket del equipo (2-7)
-    /// </summary>
     private void RefreshTeamSocket()
     {
-        if (InventoryManager.Instance == null) return;
+        var inv = InventoryManager.Instance;
+        if (inv == null)
+            return;
 
-        var capturedPokemons = InventoryManager.Instance.GetCapturedPokemons();
-        
-        // Verificar si hay un pokemon para este índice
-        if (teamIndex < capturedPokemons.Count)
+        var captured = inv.GetCapturedPokemons(); // assumes entry.speciesPoolKey
+        if (captured == null || teamIndex < 0 || teamIndex >= captured.Count)
         {
-            var pokemon = capturedPokemons[teamIndex];
-            
-            // Si el socket ya tiene la pokeball correcta, no hacer nada
+            // No pokemon for this slot -> clear any ball
             if (hasSelection && interactablesSelected.Count > 0)
             {
-                var currentSelection = interactablesSelected[0];
-                var currentPokeball = (currentSelection as MonoBehaviour)?.GetComponent<PokeballGrabInteractable>();
-                
-                if (currentPokeball != null && 
-                    currentPokeball.GetMode() == PokeballGrabInteractable.BallMode.Full &&
-                    currentPokeball.GetAssignedSpecies() == pokemon.speciesPoolKey)
+                var currentInteractable = interactablesSelected[0];
+                var mb = currentInteractable as MonoBehaviour;
+                var ball = mb ? mb.GetComponent<PokeballGrabInteractable>() : null;
+                if (ball != null)
                 {
-                    return; // Ya tiene la pokeball correcta
-                }
-                else
-                {
-                    // Remover la pokeball incorrecta
-                    if (currentPokeball != null)
-                    {
-                        interactionManager?.SelectExit(this, currentSelection);
-                        poolManager?.ReturnPokeballToPool(currentPokeball);
-                    }
+                    interactionManager?.SelectExit(this, currentInteractable);
+                    Destroy(ball.gameObject);
                 }
             }
+            teamBall = null;
+            return;
+        }
 
-            // Obtener o crear una pokeball captured para este pokemon
-            if (poolManager != null)
+        var entry = captured[teamIndex];
+        string speciesKey = entry.speciesPoolKey;
+
+        if (teamBall == null)
+        {
+            if (teamBallPrefab != null)
             {
-                var pokeball = poolManager.GetCapturedPokeball(pokemon.speciesPoolKey);
-                if (pokeball != null)
-                {
-                    SetupPokeballInSocket(pokeball);
-                }
+                teamBall = Object.Instantiate(teamBallPrefab);
+            }
+            else if (poolManager != null)
+            {
+                teamBall = poolManager.CreateTeamPokeball();
             }
         }
-        else
+
+        if (teamBall == null)
+            return;
+
+        teamBall.gameObject.SetActive(true);
+        teamBall.SetMode(PokeballGrabInteractable.BallMode.Full);
+        teamBall.SetAssignedSpecies(speciesKey);
+        teamBall.SetBeltSocket(this);
+        teamBall.SetBeltAttach(attachPoint);
+
+        teamBall.transform.SetPositionAndRotation(attachPoint.position, attachPoint.rotation);
+
+        var interactable = teamBall as IXRSelectInteractable;
+        if (interactionManager != null && interactable != null)
         {
-            // No hay pokemon para este socket, limpiarlo si tiene algo
             if (hasSelection && interactablesSelected.Count > 0)
             {
-                var currentSelection = interactablesSelected[0];
-                var currentPokeball = (currentSelection as MonoBehaviour)?.GetComponent<PokeballGrabInteractable>();
-                
-                if (currentPokeball != null)
-                {
-                    interactionManager?.SelectExit(this, currentSelection);
-                    poolManager?.ReturnPokeballToPool(currentPokeball);
-                }
+                interactionManager.SelectExit(this, interactablesSelected[0]);
             }
+            if (CanSelect(interactable))
+                interactionManager.SelectEnter(this, interactable);
         }
     }
 
-    /// <summary>
-    /// Configura una pokeball en este socket
-    /// </summary>
-    private void SetupPokeballInSocket(PokeballGrabInteractable pokeball)
-    {
-        if (pokeball == null) return;
-
-        // Configurar la pokeball
-        pokeball.SetBeltSocket(this);
-        pokeball.SetBeltAttach(attachPoint);
-
-        // Posicionar la pokeball en el socket
-        pokeball.transform.position = attachPoint.position;
-        pokeball.transform.rotation = attachPoint.rotation;
-
-        // Intentar que el socket seleccione la pokeball
-        var interactable = pokeball.GetComponent<IXRSelectInteractable>();
-        if (interactable != null && CanSelect(interactable))
-        {
-            interactionManager?.SelectEnter(this, interactable);
-        }
-    }
-
-    /// <summary>
-    /// Limpia el socket (remueve la pokeball actual)
-    /// </summary>
-    public void ClearSocket()
-    {
-        if (!hasSelection || interactablesSelected.Count == 0) return;
-
-        var currentSelection = interactablesSelected[0];
-        var currentPokeball = (currentSelection as MonoBehaviour)?.GetComponent<PokeballGrabInteractable>();
-        
-        if (currentPokeball != null)
-        {
-            interactionManager?.SelectExit(this, currentSelection);
-            poolManager?.ReturnPokeballToPool(currentPokeball);
-        }
-    }
+    // ----------------------------------------------------------------------
+    // Event handlers
+    // ----------------------------------------------------------------------
 
     private void OnPokeballsInventoryChanged(int newCount)
     {
-        // Solo afecta al socket 1 (Empty)
         if (socketType == BeltSocketType.EmptyPokeball)
-        {
-            if (newCount <= 0)
-            {
-                ClearSocket();
-            }
-            else
-            {
-                RefreshSocket();
-            }
-        }
+            RefreshSocket();
     }
 
     private void OnTeamChanged()
     {
-        // Solo afecta a los sockets del equipo (2-7)
         if (socketType == BeltSocketType.TeamPokemon)
-        {
             RefreshSocket();
+    }
+
+    protected override void OnSelectExited(SelectExitEventArgs args)
+    {
+        base.OnSelectExited(args);
+
+        // Only auto-refresh empty socket when player takes the ball
+        if (socketType == BeltSocketType.EmptyPokeball)
+        {
+            StartCoroutine(RefreshSocketDelayed());
         }
     }
 
     private IEnumerator RefreshSocketDelayed()
     {
-        yield return null; // Esperar un frame para que el socket se limpie
+        // wait a frame so the interaction manager finishes its bookkeeping
+        yield return null;
         RefreshSocket();
     }
 
-    // --- Public methods para configuración ---
+    // ----------------------------------------------------------------------
+    // Public helpers
+    // ----------------------------------------------------------------------
 
-    /// <summary>
-    /// Establece el tipo de socket
-    /// </summary>
-    public void SetSocketType(BeltSocketType type)
-    {
-        socketType = type;
-    }
-
-    /// <summary>
-    /// Establece el índice del equipo (solo para TeamPokemon)
-    /// </summary>
-    public void SetTeamIndex(int index)
-    {
-        teamIndex = index;
-    }
-
-    /// <summary>
-    /// Establece el punto de attach
-    /// </summary>
     public void SetAttachPoint(Transform point)
     {
         attachPoint = point;
     }
 
-    /// <summary>
-    /// Obtiene el tipo de socket
-    /// </summary>
     public BeltSocketType GetSocketType() => socketType;
-
-    /// <summary>
-    /// Obtiene el índice del equipo
-    /// </summary>
     public int GetTeamIndex() => teamIndex;
 }
