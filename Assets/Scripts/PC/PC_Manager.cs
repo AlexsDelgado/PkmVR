@@ -30,6 +30,7 @@ public class PC_Manager : MonoBehaviour
     public Transform pc_pkm_spwn;
 
     public Image[] teamPortraits;
+    public TextMeshProUGUI[] teamNames;
 
     public int Used_move_slots => selected_pkm.equiped_moves_ammount;
     public void ShowPokemonList()
@@ -94,6 +95,7 @@ public class PC_Manager : MonoBehaviour
         {
             if (pkm_manager.equiped_pokemons[i].pokemon == null) continue;
             teamPortraits[i].sprite = pkm_manager.equiped_pokemons[i].pokemon.portrait;
+            teamNames[i].text = pkm_manager.equiped_pokemons[i].pokemon.name;
         }
     }
 
