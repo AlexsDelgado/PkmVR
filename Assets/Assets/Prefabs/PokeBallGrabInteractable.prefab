@@ -171,6 +171,7 @@ GameObject:
   - component: {fileID: 6484090988502691325}
   - component: {fileID: 6381817513818958055}
   - component: {fileID: 5437641118068716752}
+  - component: {fileID: 8665516885156050540}
   m_Layer: 0
   m_Name: PokeBallGrabInteractable
   m_TagString: Untagged
@@ -407,8 +408,33 @@ MonoBehaviour:
   spawnLift: 0.2
   captureBounceForce: 4
   captureSidewaysRandom: {x: -0.5, y: 0.5}
-  captureSuccessChance: 0.5
-  fx: {fileID: 0}
+  stayChancePerShake: 0.75
+  shakesCount: 3
+  timeBetweenShakes: 0.8
+  shakeAngle: 15
+  groundSnapRayHeight: 1
+  groundSnapRayDistance: 3
+  groundOffset: 0.02
+  fx: {fileID: 8665516885156050540}
+--- !u!114 &8665516885156050540
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3632408569080740839}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cdd2ad72273a8394ba52fe6ca202da6f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  kFlash: fx_flash
+  kRing: fx_ring
+  kDust: fx_dust
+  kGlow: fx_glow
+  kBallBlink: fx_ballflash
+  kBallCapture: fx_captureburst
+  trail: {fileID: 0}
 --- !u!1 &4876927579361004576
 GameObject:
   m_ObjectHideFlags: 0

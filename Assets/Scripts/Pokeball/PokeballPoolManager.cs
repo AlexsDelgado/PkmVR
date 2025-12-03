@@ -121,7 +121,7 @@ public class PokeballPoolManager : MonoBehaviour
 
         if (pokeball != null)
         {
-            pokeball.SetMode(PokeballGrabInteractable.BallMode.Captured);
+            pokeball.SetMode(PokeballGrabInteractable.BallMode.Full);
             pokeball.SetAssignedSpecies(speciesPoolKey);
             pokeball.gameObject.SetActive(true);
             activePokeballs.Add(pokeball);
@@ -137,6 +137,12 @@ public class PokeballPoolManager : MonoBehaviour
     public void ReturnPokeballToPool(PokeballGrabInteractable pokeball)
     {
         if (pokeball == null) return;
+
+        if (pokeball.GetMode() != BallMode.Empty)
+        {
+            Debug.LogWarning("Tried to return a non-empty team ball to pool – this should not happen.");
+            return;
+        }
 
         // Remover de la lista de activas
         if (activePokeballs.Contains(pokeball))

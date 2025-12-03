@@ -129,7 +129,7 @@ public class PokeBeltSocketInteractor : XRSocketInteractor
                 var currentPokeball = (currentSelection as MonoBehaviour)?.GetComponent<PokeballGrabInteractable>();
                 
                 if (currentPokeball != null && 
-                    currentPokeball.GetMode() == PokeballGrabInteractable.BallMode.Captured &&
+                    currentPokeball.GetMode() == PokeballGrabInteractable.BallMode.Full &&
                     currentPokeball.GetAssignedSpecies() == pokemon.speciesPoolKey)
                 {
                     return; // Ya tiene la pokeball correcta

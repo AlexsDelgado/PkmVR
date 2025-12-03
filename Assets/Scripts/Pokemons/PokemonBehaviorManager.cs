@@ -24,6 +24,8 @@ public class PokemonBehaviorManager : MonoBehaviour
 
     private PokemonState currentState;
 
+    public PokemonState CurrentState => currentState;
+
     private void Awake()
     {
         // Apply initial state once

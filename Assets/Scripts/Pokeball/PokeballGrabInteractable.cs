@@ -5,11 +5,16 @@ using System.Collections;
 [RequireComponent(typeof(Rigidbody), typeof(Collider))]
 public class PokeballGrabInteractable : XRGrabInteractable
 {
-    public enum BallMode { Empty, Captured }
+    public enum BallMode
+    {
+        Empty,   // no pokemon assigned, used only to capture roaming pokemon
+        Full,    // team ball with a pokemon "inside"
+        Team     // pokemon is out, ball is linked but empty; can only recall that pokemon
+    }
 
     [Header("Config")]
     [SerializeField] private BallMode mode = BallMode.Empty;
-    [SerializeField] private string assignedSpeciesPoolKey; // Solo usado en modo Captured
+    [SerializeField] private string assignedSpeciesPoolKey; // used in Full/Team modes
     [SerializeField] private LayerMask groundMask;
     [SerializeField] private float recallDelay = 0.12f;
 
@@ -22,14 +27,32 @@ public class PokeballGrabInteractable : XRGrabInteractable
     [SerializeField] private float spawnLift = 0.2f;          
     private float nextRetrievalTime = Mathf.NegativeInfinity;
 
-    [Header("Capture Settings")]
+    [Header("Capture Motion")]
     [SerializeField] private float captureBounceForce = 4f;
     [SerializeField] private Vector2 captureSidewaysRandom = new Vector2(-0.5f, 0.5f);
-    [SerializeField] private float captureSuccessChance = 0.5f; // Probabilidad de captura exitosa
+
+    [Header("Capture Chances")]
+    [Tooltip("Per-shake chance the Pokémon stays in the ball. 1 = always stays, 0 = always escapes.")]
+    [Range(0f, 1f)]
+    [SerializeField] private float stayChancePerShake = 0.75f;
+    [Tooltip("Number of shakes before a capture is considered successful.")]
+    [SerializeField] private int shakesCount = 3;
+
+    [Header("Shake Animation")]
+    [SerializeField] private float timeBetweenShakes = 0.8f;
+    [SerializeField] private float shakeAngle = 15f;
+    [SerializeField] private float groundSnapRayHeight = 1.0f;
+    [SerializeField] private float groundSnapRayDistance = 3.0f;
+    [SerializeField] private float groundOffset = 0.02f;
 
     private Rigidbody rb;
+
+    // For Team mode: currently spawned instance for this ball
     private PokemonController activePokemon;
-    private bool isCapturing = false; // Para evitar múltiples intentos de captura
+
+    // For Empty capture mode
+    private bool isCapturing = false;
+    private Coroutine captureRoutine;
 
     [SerializeField] private BallFXController fx;
     // Referencia al pool manager de pokeballs
@@ -39,10 +62,7 @@ public class PokeballGrabInteractable : XRGrabInteractable
     {
         base.Awake();
         rb = GetComponent<Rigidbody>();
-        pokeballPool = FindObjectOfType<PokeballPoolManager>();
-
-        // No necesitamos suscribirnos a los eventos porque ya estamos sobrescribiendo
-        // los métodos OnSelectEntered y OnSelectExited que se llaman automáticamente
+        pokeballPool = FindFirstObjectByType<PokeballPoolManager>();
     }
 
     void Start()
@@ -106,7 +126,7 @@ public class PokeballGrabInteractable : XRGrabInteractable
         base.OnSelectExited(args);
     }
 
-    private System.Collections.IEnumerator NotifyPokeballGrabbedDelayed()
+    private IEnumerator NotifyPokeballGrabbedDelayed()
     {
         yield return null; // Esperar un frame para que el socket se limpie
         pokeballPool?.OnPokeballGrabbed();
@@ -127,34 +147,25 @@ public class PokeballGrabInteractable : XRGrabInteractable
             }
         }
 
-        // Modo Captured: spawnea pokemon al tocar el suelo
-        if (mode == BallMode.Captured && IsGround(col.gameObject.layer))
+        if (IsGround(col.gameObject.layer))
         {
-            var cp = col.GetContact(0);
-            var spawnPos = cp.point + cp.normal * spawnLift;
-            fx?.PlayImpactSet(cp.point, cp.normal);
-
-            SpawnPokemonAt(spawnPos);
-            nextRetrievalTime = Time.time + retrievalCooldown;
-            Invoke(nameof(ReturnToPool), recallDelay);
-            return;
-        }
-
-        // Modo Empty: intentar capturar pokemon o volver al pool si falla
-        if (mode == BallMode.Empty)
-        {
-           
-            // Si colisiona con algo que no es un pokemon, volver al pool
-            var pokemon = col.gameObject.GetComponentInParent<PokemonController>();
-            if (pokemon == null && IsGround(col.gameObject.layer))
+            switch (mode)
             {
-                // Colisionó con algo que no es pokemon, volver al pool
-                Invoke(nameof(ReturnToPool), recallDelay);
-                Debug.Log("Colisionó con el suelo, volver al pool");
+                case BallMode.Full:
+                    HandleFullBallGroundHit(col);
+                    return;
+
+                case BallMode.Team:
+                    // Pokemon already out; ball just returns to belt/pool
+                    Invoke(nameof(ReturnToPool), recallDelay);
+                    return;
+
+                case BallMode.Empty:
+                    HandleEmptyBallGroundHit(col);
+                    return;
             }
         }
     }
-
     void OnTriggerEnter(Collider other)
     {
         // Ignorar triggers si está en modo cinemático (en el socket) o siendo agarrada por un socket
@@ -168,56 +179,243 @@ public class PokeballGrabInteractable : XRGrabInteractable
             }
         }
 
-        // Solo procesar captura en modo Empty
-        if (mode != BallMode.Empty) return;
         if (Time.time < nextRetrievalTime) return;
-        if (isCapturing) return;
 
         var pokemon = other.GetComponentInParent<PokemonController>();
-        if (pokemon != null && pokemon != activePokemon)
+        if (pokemon == null || pokemon == activePokemon)
+            return;
+
+        switch (mode)
         {
-            isCapturing = true;
-            AttemptCapture(pokemon);
+            case BallMode.Empty:
+                HandleEmptyBallPokemonTrigger(pokemon);
+                break;
+
+            case BallMode.Full:
+                // Full ball never captures or recalls via trigger; just bounces
+                break;
+
+            case BallMode.Team:
+                HandleTeamBallPokemonTrigger(pokemon);
+                break;
         }
     }
 
-    // --- Helpers -------------------------------------------------------------
+    // --- MODES ---------------------------------------------
 
-    private void AttemptCapture(PokemonController pokemon)
+    private void HandleFullBallGroundHit(Collision col)
     {
-        // Verificar probabilidad de captura
-        bool captureSuccess = Random.Range(0f, 1f) <= captureSuccessChance;
-
-        if (captureSuccess)
+        // If for some reason we already have an activePokemon, don't spawn another
+        if (activePokemon != null)
         {
-            // Captura exitosa
-            string speciesKey = GetPokemonSpeciesKey(pokemon);
-            
-            // Agregar al inventario
+            Invoke(nameof(ReturnToPool), recallDelay);
+            return;
+        }
+
+        if (string.IsNullOrEmpty(assignedSpeciesPoolKey))
+        {
+            Debug.LogWarning("Full ball has no assignedSpeciesPoolKey, cannot spawn team Pokémon.");
+            Invoke(nameof(ReturnToPool), recallDelay);
+            return;
+        }
+
+        var cp = col.GetContact(0);
+        var spawnPos = cp.point + cp.normal * spawnLift;
+        fx?.PlayImpactSet(cp.point, cp.normal);
+
+        // Spawn assigned Pokémon ONCE and switch to Team mode
+        var go = PoolManager.I.Spawn(assignedSpeciesPoolKey, spawnPos, Quaternion.identity);
+        activePokemon = go.GetComponent<PokemonController>();
+        activePokemon?.Init();
+
+        mode = BallMode.Team;
+        nextRetrievalTime = Time.time + retrievalCooldown;
+
+        // Return ball to belt/pool after short delay
+        Invoke(nameof(ReturnToPool), recallDelay);
+    }
+
+    private void HandleTeamBallPokemonTrigger(PokemonController pokemon)
+    {
+        // Only react if this is OUR pokemon
+        if (activePokemon == null || pokemon != activePokemon)
+            return;
+
+        // Recall: despawn and mark as stored again
+        activePokemon.Despawn();
+        activePokemon = null;
+
+        mode = BallMode.Full; // pokemon back "inside" the ball
+        nextRetrievalTime = Mathf.NegativeInfinity;
+
+        CaptureBounce(); // small rebound feedback
+        Invoke(nameof(ReturnToPool), recallDelay);
+    }
+
+    private void HandleEmptyBallGroundHit(Collision col)
+    {
+        // If it hits ground and didn't capture anything, just go back to pool
+        Invoke(nameof(ReturnToPool), recallDelay);
+    }
+
+    private void HandleEmptyBallPokemonTrigger(PokemonController pokemon)
+    {
+        if (isCapturing) return;
+
+        // Only capture roaming Pokémon
+        var behavior = pokemon.GetComponent<PokemonBehaviorManager>();
+        if (behavior != null && behavior.CurrentState != PokemonState.Roaming)
+            return;
+
+        // Avoid weird self-case
+        if (pokemon == activePokemon) return;
+
+        isCapturing = true;
+        captureRoutine = StartCoroutine(CaptureSequence(pokemon));
+    }
+
+    private IEnumerator CaptureSequence(PokemonController pokemon)
+    {
+        isCapturing = true;
+        activePokemon = pokemon;
+
+        // Datos del pokémon
+        string speciesKey = GetPokemonSpeciesKey(pokemon);
+        Vector3 pokemonPos = pokemon.transform.position;
+
+        // “Entra” en la pokeball, despawn con FX
+        pokemon.Despawn();
+        var behavior = pokemon.GetComponent<PokemonBehaviorManager>();
+        if (behavior != null)
+            behavior.EnterRoaming(); // aseguramos que vuelva a roam si lo respawneamos
+
+        CaptureBounce();
+
+        // Dejar que termine el rebote
+        float t = 0.25f;
+        while (t > 0f)
+        {
+            t -= Time.deltaTime;
+            yield return null;
+        }
+
+        // Asegurar que la pokeball quede apoyada en el suelo para el "Shake"
+        SnapToGround();
+
+        Quaternion baseRot = transform.rotation;
+        bool escaped = false;
+
+        for (int i = 0; i < shakesCount; i++)
+        {
+            // Pequeña pausa antes del movimiento
+            float prePause = timeBetweenShakes * 0.25f;
+            t = prePause;
+            while (t > 0f)
+            {
+                t -= Time.deltaTime;
+                yield return null;
+            }
+
+            // Animación de sacudida
+            float duration = timeBetweenShakes * 0.5f;
+            float elapsed = 0f;
+            while (elapsed < duration)
+            {
+                elapsed += Time.deltaTime;
+                float n = elapsed / duration;          // 0–1
+                float angle = Mathf.Sin(n * Mathf.PI * 2f) * shakeAngle;
+                transform.rotation = baseRot * Quaternion.Euler(0f, 0f, angle);
+                yield return null;
+            }
+            transform.rotation = baseRot;
+
+            // Tirada de escape en este “Shake”
+            float roll = Random.value;
+            if (roll > stayChancePerShake)
+            {
+                escaped = true;
+                break;
+            }
+
+            // Pequeña pausa después del movimiento
+            float postPause = timeBetweenShakes * 0.25f;
+            t = postPause;
+            while (t > 0f)
+            {
+                t -= Time.deltaTime;
+                yield return null;
+            }
+        }
+
+        transform.rotation = baseRot;
+
+        if (escaped)
+        {
+            // El pokémon escapa, respawn en el punto original
+            var go = PoolManager.I.Spawn(speciesKey, pokemonPos, Quaternion.identity);
+            var newPokemon = go.GetComponent<PokemonController>();
+            newPokemon?.Init();
+
+            var newBehavior = go.GetComponent<PokemonBehaviorManager>();
+            newBehavior?.EnterRoaming();
+        }
+        else
+        {
+            // Captura exitosa, mandar al PC / inventario
             if (InventoryManager.Instance != null)
             {
                 InventoryManager.Instance.AddCapturedPokemon(speciesKey);
                 InventoryManager.Instance.SpendPokeball();
             }
 
-            // Despawnear el pokemon
-            pokemon.Despawn();
-            activePokemon = null;
-            
-            // Efecto de captura
-            CaptureBounce();
-            
-            // Volver al pool después de la captura
-            StartCoroutine(ReturnToPoolAfterCapture());
+            //TO DO: chequer si esto es suficiente para mandar al pokemon a la lista de la pc
+        }
+
+        // Pequeña espera para ver el resultado y luego volver al cinturón/pool
+        t = 0.35f;
+        while (t > 0f)
+        {
+            t -= Time.deltaTime;
+            yield return null;
+        }
+
+        ReturnToPool();
+
+        isCapturing = false;
+        activePokemon = null;
+        captureRoutine = null;
+    }
+
+    private void SnapToGround()
+    {
+        if (!rb) return;
+
+        Vector3 origin = transform.position + Vector3.up * groundSnapRayHeight;
+        if (Physics.Raycast(origin, Vector3.down, out RaycastHit hit,
+            groundSnapRayDistance, groundMask, QueryTriggerInteraction.Ignore))
+        {
+            rb.velocity = Vector3.zero;
+            rb.angularVelocity = Vector3.zero;
+            rb.isKinematic = true;
+            rb.useGravity = false;
+
+            transform.position = hit.point + Vector3.up * groundOffset;
+            // mantener yaw, pero nivelar la pokeball
+            Vector3 euler = transform.eulerAngles;
+            transform.rotation = Quaternion.Euler(0f, euler.y, 0f);
         }
         else
         {
-            // Captura fallida - el pokemon escapa
-            activePokemon = pokemon;
-            CaptureBounce();
-            StartCoroutine(ReturnToPoolAfterFailedCapture());
+            // fallback: simplemente parar la física
+            rb.velocity = Vector3.zero;
+            rb.angularVelocity = Vector3.zero;
+            rb.isKinematic = true;
+            rb.useGravity = false;
         }
     }
+
+
+    // --- Helpers -------------------------------------------------------------
 
     private string GetPokemonSpeciesKey(PokemonController pokemon)
     {
@@ -230,19 +428,6 @@ public class PokeballGrabInteractable : XRGrabInteractable
             }
         }
         return assignedSpeciesPoolKey ?? "Unknown";
-    }
-
-    private void SpawnPokemonAt(Vector3 pos)
-    {
-        if (string.IsNullOrEmpty(assignedSpeciesPoolKey))
-        {
-            Debug.LogWarning("PokeballGrabInteractable: assignedSpeciesPoolKey no está asignado");
-            return;
-        }
-
-        var go = PoolManager.I.Spawn(assignedSpeciesPoolKey, pos, Quaternion.identity);
-        activePokemon = go.GetComponent<PokemonController>();
-        activePokemon?.Init();
     }
 
     private void CaptureBounce()
@@ -283,23 +468,6 @@ public class PokeballGrabInteractable : XRGrabInteractable
             gameObject.SetActive(false);
             Debug.Log("No hay pool manager, desactivar");
         }
-    }
-
-    private IEnumerator ReturnToPoolAfterCapture()
-    {
-        yield return new WaitForSeconds(0.35f);
-        Debug.Log("Return to pool after capture");
-        ReturnToPool();
-        isCapturing = false;
-    }
-
-    private IEnumerator ReturnToPoolAfterFailedCapture()
-    {
-        yield return new WaitForSeconds(0.35f);
-        Debug.Log("Return to pool after failed capture");
-        ReturnToPool();
-        isCapturing = false;
-        activePokemon = null;
     }
 
     private void MakeKinematicDocked()

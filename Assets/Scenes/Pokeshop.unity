@@ -723,63 +723,6 @@ Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 865775c1497e6a94ab7f17e27743e3a3, type: 3}
   m_PrefabInstance: {fileID: 266504838}
   m_PrefabAsset: {fileID: 0}
---- !u!1001 &271275712
-PrefabInstance:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    serializedVersion: 3
-    m_TransformParent: {fileID: 0}
-    m_Modifications:
-    - target: {fileID: 3632408569080740839, guid: ca796790e1bc55343b7d1831b012590c, type: 3}
-      propertyPath: m_Name
-      value: PokeBallGrabInteractable (1)
-      objectReference: {fileID: 0}
-    - target: {fileID: 6195279214701384075, guid: ca796790e1bc55343b7d1831b012590c, type: 3}
-      propertyPath: m_LocalPosition.x
-      value: -0.45
-      objectReference: {fileID: 0}
-    - target: {fileID: 6195279214701384075, guid: ca796790e1bc55343b7d1831b012590c, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6195279214701384075, guid: ca796790e1bc55343b7d1831b012590c, type: 3}
-      propertyPath: m_LocalPosition.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6195279214701384075, guid: ca796790e1bc55343b7d1831b012590c, type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 6195279214701384075, guid: ca796790e1bc55343b7d1831b012590c, type: 3}
-      propertyPath: m_LocalRotation.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6195279214701384075, guid: ca796790e1bc55343b7d1831b012590c, type: 3}
-      propertyPath: m_LocalRotation.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6195279214701384075, guid: ca796790e1bc55343b7d1831b012590c, type: 3}
-      propertyPath: m_LocalRotation.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6195279214701384075, guid: ca796790e1bc55343b7d1831b012590c, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6195279214701384075, guid: ca796790e1bc55343b7d1831b012590c, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6195279214701384075, guid: ca796790e1bc55343b7d1831b012590c, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-    m_RemovedGameObjects: []
-    m_AddedGameObjects: []
-    m_AddedComponents: []
-  m_SourcePrefab: {fileID: 100100000, guid: ca796790e1bc55343b7d1831b012590c, type: 3}
 --- !u!1 &299639867
 GameObject:
   m_ObjectHideFlags: 0
@@ -2297,11 +2240,6 @@ Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: b335f86f7b4aefb4aad1bcc2616f5b6c, type: 3}
   m_PrefabInstance: {fileID: 1137274455}
   m_PrefabAsset: {fileID: 0}
---- !u!137 &733305146 stripped
-SkinnedMeshRenderer:
-  m_CorrespondingSourceObject: {fileID: 5597771792997562767, guid: 7221a9d4f114c444d80f4bfeea0091b9, type: 3}
-  m_PrefabInstance: {fileID: 771441773304444762}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &825585173
 GameObject:
   m_ObjectHideFlags: 0
@@ -3502,6 +3440,30 @@ Transform:
   - {fileID: 1966881950}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 90, z: 0}
+--- !u!1 &1042797635 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 3632408569080740839, guid: ca796790e1bc55343b7d1831b012590c, type: 3}
+  m_PrefabInstance: {fileID: 1469330350}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1042797640
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1042797635}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cdd2ad72273a8394ba52fe6ca202da6f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  kFlash: fx_flash
+  kRing: fx_ring
+  kDust: fx_dust
+  kGlow: fx_glow
+  kBallBlink: fx_ballflash
+  kBallCapture: fx_captureburst
+  trail: {fileID: 1908055982}
 --- !u!1 &1043429404
 GameObject:
   m_ObjectHideFlags: 0
@@ -4610,63 +4572,6 @@ Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: d4267466970ddd7468296aacae28c883, type: 3}
   m_PrefabInstance: {fileID: 1257710612}
   m_PrefabAsset: {fileID: 0}
---- !u!1001 &1287637618
-PrefabInstance:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    serializedVersion: 3
-    m_TransformParent: {fileID: 0}
-    m_Modifications:
-    - target: {fileID: 3632408569080740839, guid: ca796790e1bc55343b7d1831b012590c, type: 3}
-      propertyPath: m_Name
-      value: PokeBallGrabInteractable (2)
-      objectReference: {fileID: 0}
-    - target: {fileID: 6195279214701384075, guid: ca796790e1bc55343b7d1831b012590c, type: 3}
-      propertyPath: m_LocalPosition.x
-      value: -1.12
-      objectReference: {fileID: 0}
-    - target: {fileID: 6195279214701384075, guid: ca796790e1bc55343b7d1831b012590c, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6195279214701384075, guid: ca796790e1bc55343b7d1831b012590c, type: 3}
-      propertyPath: m_LocalPosition.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6195279214701384075, guid: ca796790e1bc55343b7d1831b012590c, type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 6195279214701384075, guid: ca796790e1bc55343b7d1831b012590c, type: 3}
-      propertyPath: m_LocalRotation.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6195279214701384075, guid: ca796790e1bc55343b7d1831b012590c, type: 3}
-      propertyPath: m_LocalRotation.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6195279214701384075, guid: ca796790e1bc55343b7d1831b012590c, type: 3}
-      propertyPath: m_LocalRotation.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6195279214701384075, guid: ca796790e1bc55343b7d1831b012590c, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6195279214701384075, guid: ca796790e1bc55343b7d1831b012590c, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6195279214701384075, guid: ca796790e1bc55343b7d1831b012590c, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-    m_RemovedGameObjects: []
-    m_AddedGameObjects: []
-    m_AddedComponents: []
-  m_SourcePrefab: {fileID: 100100000, guid: ca796790e1bc55343b7d1831b012590c, type: 3}
 --- !u!1001 &1297830477
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -5386,6 +5291,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: PokeBallGrabInteractable
       objectReference: {fileID: 0}
+    - target: {fileID: 5437641118068716752, guid: ca796790e1bc55343b7d1831b012590c, type: 3}
+      propertyPath: fx
+      value: 
+      objectReference: {fileID: 1042797640}
     - target: {fileID: 6195279214701384075, guid: ca796790e1bc55343b7d1831b012590c, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -5429,7 +5338,10 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 3632408569080740839, guid: ca796790e1bc55343b7d1831b012590c, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1042797640}
   m_SourcePrefab: {fileID: 100100000, guid: ca796790e1bc55343b7d1831b012590c, type: 3}
 --- !u!1 &1472552384
 GameObject:
@@ -6542,6 +6454,10 @@ PrefabInstance:
     - target: {fileID: 7109459304062473910, guid: 0b7893bb320e80c448f98960c3ec0883, type: 3}
       propertyPath: m_Name
       value: Squirtle
+      objectReference: {fileID: 0}
+    - target: {fileID: 7109459304062473910, guid: 0b7893bb320e80c448f98960c3ec0883, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7629677474746272780, guid: 0b7893bb320e80c448f98960c3ec0883, type: 3}
       propertyPath: m_LocalPosition.x
@@ -8404,44 +8320,11 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 6229627227889187463, guid: 7221a9d4f114c444d80f4bfeea0091b9, type: 3}
-      propertyPath: 'rend.Array.data[0]'
-      value: 
-      objectReference: {fileID: 733305146}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 3635125100979243280, guid: 7221a9d4f114c444d80f4bfeea0091b9, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 771441773304444764}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 7221a9d4f114c444d80f4bfeea0091b9, type: 3}
---- !u!1 &771441773304444763 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 3635125100979243280, guid: 7221a9d4f114c444d80f4bfeea0091b9, type: 3}
-  m_PrefabInstance: {fileID: 771441773304444762}
-  m_PrefabAsset: {fileID: 0}
---- !u!135 &771441773304444764
-SphereCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 771441773304444763}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 1
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Radius: 0.67275846
-  m_Center: {x: 0, y: 0.57724154, z: -0}
 --- !u!1001 &1411648057213199336
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -9260,7 +9143,5 @@ SceneRoots:
   - {fileID: 1236512548}
   - {fileID: 1486668326}
   - {fileID: 1469330350}
-  - {fileID: 271275712}
-  - {fileID: 1287637618}
   - {fileID: 771441773304444762}
   - {fileID: 1764402223}
