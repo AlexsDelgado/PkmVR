@@ -270,6 +270,7 @@ public class PokeballGrabInteractable : XRGrabInteractable
         // Avoid weird self-case
         if (pokemon == activePokemon) return;
 
+        isCapturing = true;
         captureRoutine = StartCoroutine(CaptureSequence(pokemon));
     }
 
@@ -284,6 +285,9 @@ public class PokeballGrabInteractable : XRGrabInteractable
 
         // “Entra” en la pokeball, despawn con FX
         pokemon.Despawn();
+        var behavior = pokemon.GetComponent<PokemonBehaviorManager>();
+        if (behavior != null)
+            behavior.EnterRoaming(); // aseguramos que vuelva a roam si lo respawneamos
 
         CaptureBounce();
 
@@ -364,7 +368,7 @@ public class PokeballGrabInteractable : XRGrabInteractable
                 InventoryManager.Instance.SpendPokeball();
             }
 
-            PokemonsManager.Instance.AddNewPokemon(pokemon.pkm_data, 5);
+            //TO DO: chequer si esto es suficiente para mandar al pokemon a la lista de la pc
         }
 
         // Pequeña espera para ver el resultado y luego volver al cinturón/pool
@@ -445,24 +449,14 @@ public class PokeballGrabInteractable : XRGrabInteractable
 
     private void ReturnToPool()
     {
-        if (rb != null)
+        // Solo establecer velocidad si el cuerpo no es cinemático
+        if (rb != null && !rb.isKinematic)
         {
             rb.velocity = Vector3.zero;
             rb.angularVelocity = Vector3.zero;
         }
-
         
-        //Team balls, go back to their socket, keeping state
-        if (beltSocket is PokeBeltSocketInteractor belt && belt.GetSocketType() == BeltSocketType.TeamPokemon)
-        {
-            MakeKinematicDocked();
-            if (beltAttach != null)
-                transform.SetPositionAndRotation(beltAttach.position, beltAttach.rotation);
-            TrySocketSelect();
-            return;
-        }
-
-        // Empty balls, return to pool and reset state
+        // Notificar al pool manager para que devuelva esta pokeball al pool
         if (pokeballPool != null)
         {
             pokeballPool.ReturnPokeballToPool(this);
@@ -562,3 +556,4 @@ public class PokeballGrabInteractable : XRGrabInteractable
         beltAttach = attach;
     }
 }
+
