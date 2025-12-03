@@ -257,7 +257,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 701742021128429737}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 4529734393079984244}
+        m_TargetAssemblyTypeName: PC_Move_Button, Assembly-CSharp
+        m_MethodName: TryEquip
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &4529734393079984244
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -274,4 +286,5 @@ MonoBehaviour:
   idx: 0
   my_button: {fileID: 3507881617541950488}
   my_image: {fileID: 701742021128429737}
-  equiped_move: {r: 0, g: 0, b: 0, a: 0}
+  equiped_move: {r: 0, g: 0, b: 0, a: 0.39215687}
+  equiped: 0

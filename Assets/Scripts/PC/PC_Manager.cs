@@ -29,6 +29,8 @@ public class PC_Manager : MonoBehaviour
     public GameObject pc_pkm_pf;
     public Transform pc_pkm_spwn;
 
+    public Image[] teamPortraits;
+
     public int Used_move_slots => selected_pkm.equiped_moves_ammount;
     public void ShowPokemonList()
     {
@@ -45,6 +47,7 @@ public class PC_Manager : MonoBehaviour
         {
             pc_pokemons[i].SetActive(false);
         }
+        UpdateTeamPortraits();
     }
 
     public void ShowPKMDetails(StoredPokemon pkm)
@@ -82,6 +85,16 @@ public class PC_Manager : MonoBehaviour
     public void EquipPokemon(int team_pos)
     {
         pkm_manager.EquipPokemon(selected_pkm.captured_number, team_pos);
+        UpdateTeamPortraits();
+    }
+
+    public void UpdateTeamPortraits()
+    {
+        for (int i = 0; i < 3; i++)
+        {
+            if (pkm_manager.equiped_pokemons[i].pokemon == null) continue;
+            teamPortraits[i].sprite = pkm_manager.equiped_pokemons[i].pokemon.portrait;
+        }
     }
 
     public void EquipMove(MoveData new_move)

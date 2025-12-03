@@ -16,7 +16,7 @@ public class PokemonsManager : MonoBehaviour
     }
 
     [Header("Pokemons")]
-    [SerializeField] StoredPokemon[] equiped_pokemons;
+    public StoredPokemon[] equiped_pokemons;
     public List<StoredPokemon> my_pokemons = new List<StoredPokemon>();
 
     [Header("Global parameters")]
@@ -30,7 +30,7 @@ public class PokemonsManager : MonoBehaviour
     }
     public void EquipPokemon(int pkm_idx, int team_pos)
     {
-        my_pokemons[equiped_pokemons[team_pos].captured_number].equiped = false;
+        if (equiped_pokemons[team_pos].captured_number != -1) my_pokemons[equiped_pokemons[team_pos].captured_number].equiped = false;
         equiped_pokemons[team_pos] = my_pokemons[pkm_idx];
         my_pokemons[pkm_idx].equiped = true;
     }
@@ -86,6 +86,7 @@ public class StoredPokemon
     {
         foreach (MoveData m in active_moves)
         {
+            if (m == null) continue;
             if (m.ID == move.ID) return true;
         }
         return false;
@@ -101,6 +102,7 @@ public class StoredPokemon
                 if (active_moves[i] == null)
                 {
                     active_moves[i] = new_move;
+                    equiped_moves_ammount++;
                     return;
                 }
             }
@@ -109,9 +111,11 @@ public class StoredPokemon
         {
             for (int i = 0; i < 4; i++)
             {
+                if (active_moves[i] == null) continue;
                 if (active_moves[i].ID == old_move.ID)
                 {
                     active_moves[i] = null;
+                    equiped_moves_ammount--;
                     return;
                 }
             }

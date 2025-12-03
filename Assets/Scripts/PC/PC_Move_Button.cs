@@ -12,7 +12,7 @@ public class PC_Move_Button : MonoBehaviour
     public Image my_image;
     public Color equiped_move;
     Color unequiped_move = Color.white;
-    bool equiped;
+    public bool equiped;
     PC_Manager pc_manager;
     MoveData move;
 
@@ -31,13 +31,15 @@ public class PC_Move_Button : MonoBehaviour
         if (equiped)
         {
             pc_manager.UnequipMove(move);
-            my_image.color = equiped_move;
+            my_image.color = unequiped_move;
+            equiped = false;
         }
         else
         {
             if (pc_manager.Used_move_slots >= 4) return;
             pc_manager.EquipMove(move);
-            my_image.color = unequiped_move;
+            my_image.color = equiped_move;
+            equiped = true;
         }
     }
 

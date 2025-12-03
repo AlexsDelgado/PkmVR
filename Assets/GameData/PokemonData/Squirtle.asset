@@ -30,3 +30,5 @@ MonoBehaviour:
   moveList:
   - my_move: {fileID: 11400000, guid: 94207203fd0a3414ba7f889d706d293a, type: 2}
     min_lvl: 0
+  - my_move: {fileID: 11400000, guid: ac356068a783ef14597825935ddc0056, type: 2}
+    min_lvl: 0
