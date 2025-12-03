@@ -76,7 +76,7 @@ public class StoredPokemon
     public int current_lvl;
     int current_exp;
     public MoveData[] active_moves;
-    public int equiped_moves_ammount;
+    public int equiped_moves_ammount = 0;
     public bool equiped;
     public int captured_number;
 
@@ -87,6 +87,10 @@ public class StoredPokemon
         current_health = my_pokemon.GetHealth(current_lvl);
         current_exp = 0;
         active_moves = moves;
+        foreach (MoveData move in moves)
+        {
+            if (move != null) equiped_moves_ammount++;
+        }
         captured_number = captured_num;
         equiped = is_equiped;
     }

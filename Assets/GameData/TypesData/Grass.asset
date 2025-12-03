@@ -10,13 +10,13 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 3062b721eb0ab1f49933103656b3cd9f, type: 3}
-  m_Name: Water
+  m_Name: Grass
   m_EditorClassIdentifier: 
   ID: 0
   interactions:
+  - targetType: {fileID: 11400000, guid: 08d0f0f6d7d37a7419735aa1778483bc, type: 2}
+    multiplier: 2
   - targetType: {fileID: 11400000}
     multiplier: 2
-  - targetType: {fileID: 11400000, guid: 08d0f0f6d7d37a7419735aa1778483bc, type: 2}
-    multiplier: 4
-  - targetType: {fileID: 11400000, guid: 0b52168decfe38a42b9eb1488f10b840, type: 2}
+  - targetType: {fileID: 11400000, guid: 12905381c78f2cf49becedb093b3afc2, type: 2}
     multiplier: 2
