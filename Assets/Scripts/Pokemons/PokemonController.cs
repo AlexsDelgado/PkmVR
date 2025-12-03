@@ -3,6 +3,7 @@ using UnityEngine;
 public class PokemonController : MonoBehaviour
 {
     [SerializeField] private string poolKey;
+    public PokemonData pkm_data;
 
     [SerializeField] private PokemonFXController pfx;
     [SerializeField] private string fxSwirlKey = "fx_swirl";

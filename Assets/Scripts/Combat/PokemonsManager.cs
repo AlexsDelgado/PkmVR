@@ -22,11 +22,20 @@ public class PokemonsManager : MonoBehaviour
     [Header("Global parameters")]
     [SerializeField] int exp_to_lvl_up_base;
     [SerializeField] int extra_exp_per_lvl;
+    [SerializeField] MoveData[] default_moves;
 
 
-    public void AddNewPokemon(PokemonData my_pokemon, int lvl, MoveData[] moves)
+
+    public void AddNewPokemon(PokemonData my_pokemon, int lvl, MoveData[] moves = null)
     {
-        my_pokemons.Add(new StoredPokemon(my_pokemon, lvl, moves, my_pokemons.Count));
+        if (moves == null)
+        {
+            my_pokemons.Add(new StoredPokemon(my_pokemon, lvl, default_moves, my_pokemons.Count));
+        }
+        else
+        {
+            my_pokemons.Add(new StoredPokemon(my_pokemon, lvl, moves, my_pokemons.Count));
+        }
     }
     public void EquipPokemon(int pkm_idx, int team_pos)
     {
