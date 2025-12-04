@@ -95,6 +95,11 @@ public class PokemonSpawnZone : MonoBehaviour
         if (playerRoot == null)
             return false;
 
+        // NEW: ignore pokéballs (and anything under them) even though they are
+        // parented under the XR Origin / player root.
+        if (col.GetComponentInParent<PokeballGrabInteractable>() != null)
+            return false;
+
         Transform t = col.transform;
         while (t != null)
         {

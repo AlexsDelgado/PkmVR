@@ -1945,12 +1945,12 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 437970906}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.00000005960463, y: 0.0000000034417187, z: -0.0000000014256065, w: 1}
-  m_LocalPosition: {x: 0.388, y: 0.021, z: -2.83}
-  m_LocalScale: {x: 0.1, y: 0.2, z: 0.2}
+  m_LocalRotation: {x: -0.021567833, y: 0.96320313, z: -0.2662152, w: -0.03006819}
+  m_LocalPosition: {x: -0.10988868, y: 0.0133776665, z: -0.021757388}
+  m_LocalScale: {x: 0.02, y: 0.020000001, z: 0.02}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 860412651}
+  m_Father: {fileID: 898751526}
   m_LocalEulerAnglesHint: {x: 45, y: 0, z: 0}
 --- !u!114 &437970908
 MonoBehaviour:
@@ -1964,13 +1964,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 876c89dc9ba42b542a7f3e0ffda91442, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_InteractionManager: {fileID: 0}
+  m_InteractionManager: {fileID: 452463680}
   m_InteractionLayerMask:
     serializedVersion: 2
     m_Bits: 4294967295
   m_InteractionLayers:
     m_Bits: 64
-  m_AttachTransform: {fileID: 0}
+  m_AttachTransform: {fileID: 437970907}
   m_KeepSelectedTargetValid: 1
   m_DisableVisualsWhenBlockedInGroup: 1
   m_StartingSelectedInteractable: {fileID: 0}
@@ -3658,6 +3658,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 860412651}
+  - {fileID: 898751526}
   m_Father: {fileID: 933081548}
   m_LocalEulerAnglesHint: {x: 0, y: 3.182, z: 0}
 --- !u!114 &621193859
@@ -3672,7 +3673,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: af01d82d50c21aa4ea8999f834d483da, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  head: {fileID: 933081548}
+  head: {fileID: 495400599}
   localOffset: {x: 0, y: -0.6, z: 0.5}
   yawLerp: 20
 --- !u!4 &635628723 stripped
@@ -3708,12 +3709,12 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 675329263}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.00000005960463, y: 0.0000000034417187, z: -0.0000000014256065, w: 1}
-  m_LocalPosition: {x: 0.131, y: 0.026, z: -2.78}
-  m_LocalScale: {x: 0.1, y: 0.2, z: 0.2}
+  m_LocalRotation: {x: -0.021567833, y: 0.96320313, z: -0.2662152, w: -0.03006819}
+  m_LocalPosition: {x: -0.03305107, y: 0.0155183375, z: -0.027792674}
+  m_LocalScale: {x: 0.02, y: 0.020000001, z: 0.02}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 860412651}
+  m_Father: {fileID: 898751526}
   m_LocalEulerAnglesHint: {x: 45, y: 0, z: 0}
 --- !u!114 &675329265
 MonoBehaviour:
@@ -3727,13 +3728,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 876c89dc9ba42b542a7f3e0ffda91442, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_InteractionManager: {fileID: 0}
+  m_InteractionManager: {fileID: 452463680}
   m_InteractionLayerMask:
     serializedVersion: 2
     m_Bits: 4294967295
   m_InteractionLayers:
     m_Bits: 64
-  m_AttachTransform: {fileID: 0}
+  m_AttachTransform: {fileID: 675329264}
   m_KeepSelectedTargetValid: 1
   m_DisableVisualsWhenBlockedInGroup: 1
   m_StartingSelectedInteractable: {fileID: 0}
@@ -5014,11 +5015,7 @@ Transform:
   m_LocalPosition: {x: 0.005, y: -0, z: -0.053}
   m_LocalScale: {x: 0.3, y: 0.1, z: 0.01}
   m_ConstrainProportionsScale: 0
-  m_Children:
-  - {fileID: 437970907}
-  - {fileID: 675329264}
-  - {fileID: 1546210861}
-  - {fileID: 1054012727}
+  m_Children: []
   m_Father: {fileID: 621193858}
   m_LocalEulerAnglesHint: {x: 30.94, y: -176.896, z: -361.706}
 --- !u!65 &860412652
@@ -5319,6 +5316,41 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 76733298660638674, guid: eecc3cd4cd628224c8e26b1f95898814, type: 3}
   m_PrefabInstance: {fileID: 898221457}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &898751525
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 898751526}
+  m_Layer: 0
+  m_Name: Sockets
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &898751526
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 898751525}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 437970907}
+  - {fileID: 675329264}
+  - {fileID: 1546210861}
+  - {fileID: 1054012727}
+  m_Father: {fileID: 621193858}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &909790774
 GameObject:
   m_ObjectHideFlags: 0
@@ -6306,12 +6338,12 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1054012726}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.00000005960463, y: 0.0000000034417187, z: -0.0000000014256065, w: 1}
-  m_LocalPosition: {x: -0.348, y: 0.018, z: -2.86}
-  m_LocalScale: {x: 0.1, y: 0.2, z: 0.2}
+  m_LocalRotation: {x: -0.021567833, y: 0.96320313, z: -0.2662152, w: -0.03006819}
+  m_LocalPosition: {x: 0.1103385, y: 0.018913746, z: -0.03667224}
+  m_LocalScale: {x: 0.02, y: 0.020000001, z: 0.02}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 860412651}
+  m_Father: {fileID: 898751526}
   m_LocalEulerAnglesHint: {x: 45, y: 0, z: 0}
 --- !u!114 &1054012728
 MonoBehaviour:
@@ -6325,13 +6357,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 876c89dc9ba42b542a7f3e0ffda91442, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_InteractionManager: {fileID: 0}
+  m_InteractionManager: {fileID: 452463680}
   m_InteractionLayerMask:
     serializedVersion: 2
     m_Bits: 4294967295
   m_InteractionLayers:
     m_Bits: 64
-  m_AttachTransform: {fileID: 0}
+  m_AttachTransform: {fileID: 1054012727}
   m_KeepSelectedTargetValid: 1
   m_DisableVisualsWhenBlockedInGroup: 1
   m_StartingSelectedInteractable: {fileID: 0}
@@ -10029,12 +10061,12 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1546210860}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.00000005960463, y: 0.0000000034417187, z: -0.0000000014256065, w: 1}
-  m_LocalPosition: {x: -0.096, y: 0.018, z: -2.86}
-  m_LocalScale: {x: 0.1, y: 0.2, z: 0.2}
+  m_LocalRotation: {x: -0.021567833, y: 0.96320313, z: -0.2662152, w: -0.03006819}
+  m_LocalPosition: {x: 0.03494534, y: 0.016983002, z: -0.031425044}
+  m_LocalScale: {x: 0.02, y: 0.020000001, z: 0.02}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 860412651}
+  m_Father: {fileID: 898751526}
   m_LocalEulerAnglesHint: {x: 45, y: 0, z: 0}
 --- !u!114 &1546210862
 MonoBehaviour:
@@ -10048,13 +10080,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 876c89dc9ba42b542a7f3e0ffda91442, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_InteractionManager: {fileID: 0}
+  m_InteractionManager: {fileID: 452463680}
   m_InteractionLayerMask:
     serializedVersion: 2
     m_Bits: 4294967295
   m_InteractionLayers:
     m_Bits: 64
-  m_AttachTransform: {fileID: 0}
+  m_AttachTransform: {fileID: 1546210861}
   m_KeepSelectedTargetValid: 1
   m_DisableVisualsWhenBlockedInGroup: 1
   m_StartingSelectedInteractable: {fileID: 0}

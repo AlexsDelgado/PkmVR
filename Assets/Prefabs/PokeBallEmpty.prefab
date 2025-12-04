@@ -146,6 +146,22 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: -9201998464447376936, guid: f77f0547edebb6b488d8987fbcae28d9, type: 3}
+      propertyPath: m_Layer
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8957467464229371216, guid: f77f0547edebb6b488d8987fbcae28d9, type: 3}
+      propertyPath: m_Layer
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: f77f0547edebb6b488d8987fbcae28d9, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: f77f0547edebb6b488d8987fbcae28d9, type: 3}
+      propertyPath: m_LocalScale.z
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: f77f0547edebb6b488d8987fbcae28d9, type: 3}
       propertyPath: m_LocalPosition.x
       value: 6.72
@@ -186,6 +202,26 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: f77f0547edebb6b488d8987fbcae28d9, type: 3}
+      propertyPath: m_ConstrainProportionsScale
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -4683871463178396474, guid: f77f0547edebb6b488d8987fbcae28d9, type: 3}
+      propertyPath: m_Layer
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -4621000373275393573, guid: f77f0547edebb6b488d8987fbcae28d9, type: 3}
+      propertyPath: m_Layer
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -2617911359630244032, guid: f77f0547edebb6b488d8987fbcae28d9, type: 3}
+      propertyPath: m_Layer
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 815124030199038110, guid: f77f0547edebb6b488d8987fbcae28d9, type: 3}
+      propertyPath: m_Layer
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: f77f0547edebb6b488d8987fbcae28d9, type: 3}
       propertyPath: m_Name
       value: PokeBallEmpty
@@ -197,6 +233,14 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: f77f0547edebb6b488d8987fbcae28d9, type: 3}
       propertyPath: m_IsActive
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1126984396481867234, guid: f77f0547edebb6b488d8987fbcae28d9, type: 3}
+      propertyPath: m_Layer
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5339243622216100135, guid: f77f0547edebb6b488d8987fbcae28d9, type: 3}
+      propertyPath: m_Layer
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -311,7 +355,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 4294967295
   m_InteractionLayers:
-    m_Bits: 1
+    m_Bits: 4294967295
   m_DistanceCalculationMode: 1
   m_SelectMode: 0
   m_FocusMode: 1
@@ -449,7 +493,7 @@ MonoBehaviour:
   assignedSpeciesPoolKey: 
   groundMask:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 512
   recallDelay: 0.12
   groundLayers:
     serializedVersion: 2

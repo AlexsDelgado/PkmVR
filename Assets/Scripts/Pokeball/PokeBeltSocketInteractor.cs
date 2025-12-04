@@ -37,6 +37,10 @@ public class PokeBeltSocketInteractor : XRSocketInteractor
 
         if (attachPoint == null)
             attachPoint = transform;
+
+        // IMPORTANT: Belt sockets should not auto-grab nearby balls.
+        // We will only use them when docking manually via RefreshSocket.
+        socketActive = false;
     }
 
     protected override void OnEnable()
@@ -81,22 +85,7 @@ public class PokeBeltSocketInteractor : XRSocketInteractor
     protected override void OnSelectExited(SelectExitEventArgs args)
     {
         base.OnSelectExited(args);
-
-        if (socketType != BeltSocketType.EmptyPokeball)
-            return;
-
-        // If our empty ball was taken, re-dock it later (same instance)
-        var mb = args.interactableObject as MonoBehaviour;
-        var ball = mb ? mb.GetComponent<PokeballGrabInteractable>() : null;
-
-        if (ball != null && ball == emptyBallInstance)
-            StartCoroutine(RefreshSocketDelayed());
-    }
-
-    private IEnumerator RefreshSocketDelayed()
-    {
-        yield return null;
-        RefreshSocket();
+        // Intentionally do nothing here.
     }
 
     // --------------------------------------------------------------------
@@ -223,30 +212,41 @@ public class PokeBeltSocketInteractor : XRSocketInteractor
         ball.SetBeltSocket(this);
         ball.SetBeltAttach(attachPoint);
 
-        // Parent to the belt so it follows it
+        // Parent to the belt so it follows it, but KEEP its world scale.
         var pt = attachPoint != null ? attachPoint : transform;
-        ball.transform.SetParent(pt, false);              // local space of socket
+
+        // Keep world position/rotation/scale when parenting
+        ball.transform.SetParent(pt, true);
+
+        // Now snap it to the attach point (pos/rot only – do NOT touch scale)
         ball.transform.localPosition = Vector3.zero;
         ball.transform.localRotation = Quaternion.identity;
-        ball.transform.localScale = Vector3.one;
     }
 
     private void DockAndSelectBall(PokeballGrabInteractable ball)
     {
-        // Only manage XR selection – no manual parenting.
         var interactable = ball as IXRSelectInteractable;
         if (interactionManager != null && interactable != null)
         {
+            // Temporarily allow this socket to select so SelectEnter will succeed.
+            bool wasActive = socketActive;
+            socketActive = true;
+
+            // If the socket already has something, deselect it.
             if (hasSelection && interactablesSelected.Count > 0 &&
                 interactablesSelected[0] != interactable)
             {
                 interactionManager.SelectExit(this, interactablesSelected[0]);
             }
 
+            // Select our ball
             if (!hasSelection && CanSelect(interactable))
             {
                 interactionManager.SelectEnter(this, interactable);
             }
+
+            // Go back to "manual only" mode.
+            socketActive = wasActive;
         }
     }
 

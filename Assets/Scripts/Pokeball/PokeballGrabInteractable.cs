@@ -54,6 +54,7 @@ public class PokeballGrabInteractable : XRGrabInteractable
     private PokemonController activePokemon;   // for team balls
     private bool isCapturing;                  // for empty capture flow
     private Coroutine captureRoutine;
+    private Coroutine initialDockRoutine;
 
     [SerializeField] private BallFXController fx;
     private PokeballPoolManager pokeballPool;
@@ -65,11 +66,6 @@ public class PokeballGrabInteractable : XRGrabInteractable
         rb = GetComponent<Rigidbody>();
         pokeballPool = PokeballPoolManager.Instance ?? FindFirstObjectByType<PokeballPoolManager>();
 
-        // VR-friendly grab behaviour (from cleaned script)
-        movementType = MovementType.VelocityTracking;
-        trackPosition = true;
-        trackRotation = true;
-
         if (rb != null)
         {
             rb.useGravity = true;
@@ -80,48 +76,64 @@ public class PokeballGrabInteractable : XRGrabInteractable
     private void Start()
     {
         // Start docked/stable when spawned under a belt socket.
-        StartCoroutine(InitialDockRoutine());
+        initialDockRoutine = StartCoroutine(InitialDockRoutine());
     }
 
     // XR selection ---------------------------------------------------------
 
     protected override void OnSelectEntered(SelectEnterEventArgs args)
     {
-        if (args.interactorObject is XRSocketInteractor)
+        var socketInteractor = args.interactorObject as XRSocketInteractor;
+
+        // 1) Belt socket grabs: stay parented to the belt & kinematic
+        if (socketInteractor != null)
         {
-            // Belt socket: keep parent (already set by ConfigureBallForSocket)
             MakeKinematicDocked();
             base.OnSelectEntered(args);
+            return;
         }
-        else
+
+        // 2) ANY non-socket grab (hand, ray, etc.)
+        //    -> cancel the auto-dock routine so it doesn't re-parent in mid air
+        if (initialDockRoutine != null)
         {
-            // Hand/controller: detach from belt so it can be thrown
-            transform.SetParent(null, true);   // keep world pose
+            StopCoroutine(initialDockRoutine);
+            initialDockRoutine = null;
+        }
 
-            MakeDynamicForThrow();
-            base.OnSelectEntered(args);
-            fx?.OnThrowStart();
+        // completely detach from the belt / XR rig so it can't be moved by the HMD
+        transform.SetParent(null, true);   // keep world pose but clear parent
 
-            if (mode == BallMode.Empty && beltSocket != null)
-            {
-                StartCoroutine(NotifyPokeballGrabbedDelayed());
-            }
+        MakeDynamicForThrow();
+        base.OnSelectEntered(args);
+        fx?.OnThrowStart();
+
+        if (mode == BallMode.Empty && beltSocket != null)
+        {
+            StartCoroutine(NotifyPokeballGrabbedDelayed());
         }
     }
 
     protected override void OnSelectExited(SelectExitEventArgs args)
     {
-        if (!(args.interactorObject is XRSocketInteractor))
+        bool isSocket = args.interactorObject is XRSocketInteractor;
+
+        // If released from a hand/controller, keep physics active
+        if (!isSocket && rb != null)
         {
-            // released from a hand/controller -> ensure physics is active
-            if (rb != null)
-            {
-                rb.isKinematic = false;
-                rb.useGravity = true;
-            }
+            rb.isKinematic = false;
+            rb.useGravity = true;
         }
 
+        // Let XRGrabInteractable do its thing (may try to re-parent)
         base.OnSelectExited(args);
+
+        // Then force the ball to remain un-parented so belt / HMD movement
+        // cannot affect its trajectory.
+        if (!isSocket)
+        {
+            transform.SetParent(null, true); // keep world pose, clear parent
+        }
     }
 
     private IEnumerator NotifyPokeballGrabbedDelayed()
@@ -135,22 +147,28 @@ public class PokeballGrabInteractable : XRGrabInteractable
 
     private void OnCollisionEnter(Collision col)
     {
-        // Ignore while docked in the belt (kinematic) or grabbed by a socket
         if (rb != null && rb.isKinematic) return;
-        if (isSelected && interactorsSelecting.Count > 0)
+
+        // Ignore collisions with anything under the same root as the belt,
+        // so the player body never counts as "ground".
+        if (beltSocket != null)
         {
-            foreach (var interactor in interactorsSelecting)
+            Transform t = col.transform;
+            Transform beltRoot = beltSocket.transform.root;
+            while (t != null)
             {
-                if (interactor is XRSocketInteractor)
-                    return;
+                if (t == beltRoot)
+                    return; // it's part of the player rig, not ground
+                t = t.parent;
             }
         }
 
-        // Only react to configured ground layers
+        // Only react to configured ground layers (floor)
         if (((1 << col.gameObject.layer) & groundLayers.value) == 0)
             return;
 
         StartCoroutine(AutoReturnAfterDelay());
+
     }
 
     private void OnTriggerEnter(Collider other)
@@ -423,15 +441,29 @@ public class PokeballGrabInteractable : XRGrabInteractable
     private void MakeKinematicDocked()
     {
         if (rb == null) return;
+
         rb.isKinematic = true;
         rb.useGravity = false;
+
+        // While docked or otherwise static, don't use velocity tracking / throw
+        movementType = MovementType.Kinematic;   // or Instantaneous
+        trackPosition = false;
+        trackRotation = false;
+        throwOnDetach = false;
     }
 
     private void MakeDynamicForThrow()
     {
         if (rb == null) return;
+
         rb.isKinematic = false;
         rb.useGravity = true;
+
+        // In-hand behaviour: follow controller with velocity tracking + throw
+        movementType = MovementType.VelocityTracking;
+        trackPosition = true;
+        trackRotation = true;
+        throwOnDetach = true;
     }
 
     private void DockToBeltImmediate()
@@ -465,6 +497,9 @@ public class PokeballGrabInteractable : XRGrabInteractable
 
     private IEnumerator InitialDockRoutine()
     {
+        if (beltSocket == null || beltAttach == null)
+            yield break;
+
         var col = GetComponent<Collider>();
         bool hadCol = col && col.enabled;
         if (col) col.enabled = false;
