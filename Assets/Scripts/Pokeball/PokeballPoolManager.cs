@@ -94,4 +94,11 @@ public class PokeballPoolManager : MonoBehaviour
         ball.gameObject.SetActive(true);
         return ball;
     }
+
+    public void OnPokeballGrabbed()
+    {
+        // Intentionally left blank for now.
+        // Just in case we want to add some global behavior
+        // For example: Debug.Log("Pokeball grabbed from belt.");
+    }
 }
