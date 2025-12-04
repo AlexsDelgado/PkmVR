@@ -101,4 +101,23 @@ public class PokeballPoolManager : MonoBehaviour
         // Just in case we want to add some global behavior
         // For example: Debug.Log("Pokeball grabbed from belt.");
     }
+
+    public PokeballGrabInteractable GetOrCreatePokeball()
+    {
+        PokeballGrabInteractable ball = null;
+
+        if (availablePokeballs.Count > 0)
+        {
+            ball = availablePokeballs.Dequeue();
+        }
+        else if (pokeballPrefab != null)
+        {
+            ball = Instantiate(pokeballPrefab, transform);
+        }
+
+        if (ball != null)
+            ball.gameObject.SetActive(true);
+
+        return ball;
+    }
 }

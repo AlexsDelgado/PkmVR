@@ -124,13 +124,27 @@ public class PokeBeltSocketInteractor : XRSocketInteractor
         int count = inv.GetPokeballs();
         bool shouldBeVisible = count > 0;
 
-        // Lazily create the instance once
-        if (emptyBallInstance == null && emptyBallPrefab != null)
+        // Lazily obtain an instance once (prefer the pool, fall back to prefab)
+        if (emptyBallInstance == null)
         {
-            emptyBallInstance = Instantiate(emptyBallPrefab);
-            ConfigureBallForSocket(emptyBallInstance);
-            emptyBallInstance.SetMode(PokeballGrabInteractable.BallMode.Empty);
-            emptyBallInstance.SetAssignedSpecies(null);
+            // Try to get one from the pool
+            if (PokeballPoolManager.Instance != null)
+            {
+                emptyBallInstance = PokeballPoolManager.Instance.GetOrCreatePokeball();
+            }
+
+            // If pool empty or not set up, fall back to prefab
+            if (emptyBallInstance == null && emptyBallPrefab != null)
+            {
+                emptyBallInstance = Instantiate(emptyBallPrefab);
+            }
+
+            if (emptyBallInstance != null)
+            {
+                ConfigureBallForSocket(emptyBallInstance);
+                emptyBallInstance.SetMode(PokeballGrabInteractable.BallMode.Empty);
+                emptyBallInstance.SetAssignedSpecies(null);
+            }
         }
 
         if (emptyBallInstance == null)
@@ -208,13 +222,18 @@ public class PokeBeltSocketInteractor : XRSocketInteractor
     {
         ball.SetBeltSocket(this);
         ball.SetBeltAttach(attachPoint);
+
+        // Parent to the belt so it follows it
+        var pt = attachPoint != null ? attachPoint : transform;
+        ball.transform.SetParent(pt, false);              // local space of socket
+        ball.transform.localPosition = Vector3.zero;
+        ball.transform.localRotation = Quaternion.identity;
+        ball.transform.localScale = Vector3.one;
     }
 
     private void DockAndSelectBall(PokeballGrabInteractable ball)
     {
-        var pt = attachPoint != null ? attachPoint : transform;
-        ball.transform.SetPositionAndRotation(pt.position, pt.rotation);
-
+        // Only manage XR selection – no manual parenting.
         var interactable = ball as IXRSelectInteractable;
         if (interactionManager != null && interactable != null)
         {
@@ -225,8 +244,26 @@ public class PokeBeltSocketInteractor : XRSocketInteractor
             }
 
             if (!hasSelection && CanSelect(interactable))
+            {
                 interactionManager.SelectEnter(this, interactable);
+            }
         }
+    }
+
+    // Called by PokeballGrabInteractable when an EMPTY belt ball
+    // has been returned to the global pool (capture attempt finished).
+    public void OnEmptyBallReturnedToPool(PokeballGrabInteractable ball)
+    {
+        if (socketType != BeltSocketType.EmptyPokeball)
+            return;
+
+        // If this socket was tracking that instance, forget it
+        if (emptyBallInstance == ball)
+            emptyBallInstance = null;
+
+        // Ask the socket to refresh: if inventory still has pokéballs,
+        // it will spawn / show a new one; if not, the socket hides.
+        RefreshSocket();
     }
 
     // --------------------------------------------------------------------

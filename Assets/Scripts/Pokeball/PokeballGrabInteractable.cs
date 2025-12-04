@@ -18,6 +18,10 @@ public class PokeballGrabInteractable : XRGrabInteractable
     [SerializeField] private LayerMask groundMask;
     [SerializeField] private float recallDelay = 0.12f;
 
+    [Header("Ground detection")]
+    [SerializeField] private LayerMask groundLayers;
+    [SerializeField] private float groundReturnDelay = 0.8f;
+
     [Header("Belt Socket")]
     [SerializeField] private PokeBeltSocketInteractor beltSocket;
     [SerializeField] private Transform beltAttach;
@@ -65,7 +69,6 @@ public class PokeballGrabInteractable : XRGrabInteractable
         movementType = MovementType.VelocityTracking;
         trackPosition = true;
         trackRotation = true;
-        throwOnDetach = false;
 
         if (rb != null)
         {
@@ -86,18 +89,19 @@ public class PokeballGrabInteractable : XRGrabInteractable
     {
         if (args.interactorObject is XRSocketInteractor)
         {
-            // grabbed by socket (belt) -> keep kinematic
+            // Belt socket: keep parent (already set by ConfigureBallForSocket)
             MakeKinematicDocked();
             base.OnSelectEntered(args);
         }
         else
         {
-            // grabbed by hand -> enable physics to throw
+            // Hand/controller: detach from belt so it can be thrown
+            transform.SetParent(null, true);   // keep world pose
+
             MakeDynamicForThrow();
             base.OnSelectEntered(args);
             fx?.OnThrowStart();
 
-            // Empty capture ball taken from belt – optional hook
             if (mode == BallMode.Empty && beltSocket != null)
             {
                 StartCoroutine(NotifyPokeballGrabbedDelayed());
@@ -131,7 +135,7 @@ public class PokeballGrabInteractable : XRGrabInteractable
 
     private void OnCollisionEnter(Collision col)
     {
-        // Ignore collisions while kinematic (docked) or held by a socket
+        // Ignore while docked in the belt (kinematic) or grabbed by a socket
         if (rb != null && rb.isKinematic) return;
         if (isSelected && interactorsSelecting.Count > 0)
         {
@@ -142,24 +146,11 @@ public class PokeballGrabInteractable : XRGrabInteractable
             }
         }
 
-        if (!IsGround(col.gameObject.layer))
+        // Only react to configured ground layers
+        if (((1 << col.gameObject.layer) & groundLayers.value) == 0)
             return;
 
-        switch (mode)
-        {
-            case BallMode.Full:
-                HandleFullBallGroundHit(col);
-                break;
-
-            case BallMode.Team:
-                // Pokémon already out; ball just goes back to belt
-                Invoke(nameof(ReturnToPool), recallDelay);
-                break;
-
-            case BallMode.Empty:
-                HandleEmptyBallGroundHit(col);
-                break;
-        }
+        StartCoroutine(AutoReturnAfterDelay());
     }
 
     private void OnTriggerEnter(Collider other)
@@ -198,38 +189,6 @@ public class PokeballGrabInteractable : XRGrabInteractable
         }
     }
 
-    // FULL (team ball with pokemon inside) --------------------------------
-
-    private void HandleFullBallGroundHit(Collision col)
-    {
-        // Already have a spawned pokemon for this ball? don't spawn another.
-        if (activePokemon != null)
-        {
-            Invoke(nameof(ReturnToPool), recallDelay);
-            return;
-        }
-
-        if (string.IsNullOrEmpty(assignedSpeciesPoolKey))
-        {
-            Debug.LogWarning("Full team ball has no assigned species key.", this);
-            Invoke(nameof(ReturnToPool), recallDelay);
-            return;
-        }
-
-        var cp = col.GetContact(0);
-        var spawnPos = cp.point + cp.normal * spawnLift;
-        fx?.PlayImpactSet(cp.point, cp.normal);
-
-        var go = PoolManager.I.Spawn(assignedSpeciesPoolKey, spawnPos, Quaternion.identity);
-        activePokemon = go.GetComponent<PokemonController>();
-        activePokemon?.Init();
-
-        mode = BallMode.Team;
-        nextRetrievalTime = Time.time + retrievalCooldown;
-
-        Invoke(nameof(ReturnToPool), recallDelay);
-    }
-
     // TEAM (pokemon out, ball linked) -------------------------------------
 
     private void HandleTeamBallPokemonTrigger(PokemonController pokemon)
@@ -249,12 +208,6 @@ public class PokeballGrabInteractable : XRGrabInteractable
     }
 
     // EMPTY (wild capture) -------------------------------------------------
-
-    private void HandleEmptyBallGroundHit(Collision col)
-    {
-        // Empty ball that didn't capture anything -> just return
-        Invoke(nameof(ReturnToPool), recallDelay);
-    }
 
     private void HandleEmptyBallPokemonTrigger(PokemonController pokemon)
     {
@@ -426,36 +379,45 @@ public class PokeballGrabInteractable : XRGrabInteractable
         rb.AddForce(dir * captureBounceForce, ForceMode.VelocityChange);
     }
 
-    private bool IsGround(int layer) => (groundMask.value & (1 << layer)) != 0;
-
     private void ReturnToPool()
     {
         if (rb != null && !rb.isKinematic)
         {
-            // only zero velocities if body is dynamic -> avoids kinematic warning
             rb.velocity = Vector3.zero;
             rb.angularVelocity = Vector3.zero;
         }
 
-        // TEAM BALLS go back to their belt socket, keeping mode and species
+        // TEAM balls (belt slots that represent a specific pokémon)
+        // should physically go back to their belt socket.
         if (beltSocket != null && beltSocket.GetSocketType() == BeltSocketType.TeamPokemon)
         {
+            // re-parent to belt attach so it follows the belt
+            if (beltAttach != null)
+            {
+                transform.SetParent(beltAttach, false);
+                transform.localPosition = Vector3.zero;
+                transform.localRotation = Quaternion.identity;
+            }
+
             MakeKinematicDocked();
+
             if (beltAttach != null)
                 transform.SetPositionAndRotation(beltAttach.position, beltAttach.rotation);
+
             TrySocketSelect();
             return;
         }
 
-        // Otherwise, treated as generic Empty ball -> use pool
+        // EMPTY capture balls that came from a belt socket:
+        if (beltSocket != null && beltSocket.GetSocketType() == BeltSocketType.EmptyPokeball)
+        {
+            beltSocket.OnEmptyBallReturnedToPool(this);
+        }
+
         if (pokeballPool != null)
-        {
             pokeballPool.ReturnPokeballToPool(this);
-        }
         else
-        {
             gameObject.SetActive(false);
-        }
     }
 
     private void MakeKinematicDocked()
@@ -520,6 +482,12 @@ public class PokeballGrabInteractable : XRGrabInteractable
 
         yield return new WaitForSeconds(0.05f);
         if (col && hadCol) col.enabled = true;
+    }
+
+    private IEnumerator AutoReturnAfterDelay()
+    {
+        yield return new WaitForSeconds(groundReturnDelay);
+        ReturnToPool();   // this is the same ReturnToPool that already works for capture
     }
 
     // Public API used by pool / belt --------------------------------------

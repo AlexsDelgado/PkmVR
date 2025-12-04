@@ -420,7 +420,7 @@ MonoBehaviour:
   m_SmoothScale: 0
   m_SmoothScaleAmount: 8
   m_TightenScale: 0.1
-  m_ThrowOnDetach: 0
+  m_ThrowOnDetach: 1
   m_ThrowSmoothingDuration: 0.25
   m_ThrowSmoothingCurve:
     serializedVersion: 2
@@ -445,12 +445,30 @@ MonoBehaviour:
   m_StartingSingleGrabTransformers: []
   m_StartingMultipleGrabTransformers: []
   m_AddDefaultGrabTransformers: 1
-  rb: {fileID: 0}
-  autoReturnDelay: 2
+  mode: 1
+  assignedSpeciesPoolKey: 
+  groundMask:
+    serializedVersion: 2
+    m_Bits: 0
+  recallDelay: 0.12
+  groundLayers:
+    serializedVersion: 2
+    m_Bits: 512
+  groundReturnDelay: 0.8
   beltSocket: {fileID: 0}
   beltAttach: {fileID: 0}
-  mode: 1
-  assignedSpeciesKey: 
+  retrievalCooldown: 0.8
+  spawnLift: 0.2
+  captureBounceForce: 4
+  captureSidewaysRandom: {x: -0.5, y: 0.5}
+  stayChancePerShake: 0.75
+  shakesCount: 3
+  timeBetweenShakes: 0.8
+  shakeAngle: 15
+  groundSnapRayHeight: 1
+  groundSnapRayDistance: 3
+  groundOffset: 0.02
+  fx: {fileID: 0}
 --- !u!4 &5552119120773218576 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: f77f0547edebb6b488d8987fbcae28d9, type: 3}
