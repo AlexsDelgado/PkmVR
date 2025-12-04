@@ -925,13 +925,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 359204777}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.00000005960463, y: 0.0000000034417187, z: -0.0000000014256065, w: 1}
+  m_LocalRotation: {x: 0, y: 1, z: 0, w: 0}
   m_LocalPosition: {x: -0.423, y: 0, z: -3.04}
   m_LocalScale: {x: 0.1, y: 0.2, z: 0.2}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 857701579}
-  m_LocalEulerAnglesHint: {x: 45, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 180, z: 0}
 --- !u!65 &359204779
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -1277,13 +1277,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 398353992}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.00000005960463, y: 0.0000000034417187, z: -0.0000000014256065, w: 1}
+  m_LocalRotation: {x: 0, y: 1, z: 0, w: 0}
   m_LocalPosition: {x: 0.073, y: 0, z: -3.04}
   m_LocalScale: {x: 0.1, y: 0.2, z: 0.2}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 857701579}
-  m_LocalEulerAnglesHint: {x: 45, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 180, z: 0}
 --- !u!65 &398353994
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -2330,13 +2330,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 825585173}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.00000005960463, y: 0.0000000034417187, z: -0.0000000014256065, w: 1}
+  m_LocalRotation: {x: 0, y: 1, z: 0, w: 0}
   m_LocalPosition: {x: 0.19, y: 0, z: -3.04}
   m_LocalScale: {x: 0.1, y: 0.2, z: 0.2}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 857701579}
-  m_LocalEulerAnglesHint: {x: 45, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 180, z: 0}
 --- !u!65 &825585175
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -3207,13 +3207,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 959706056}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.00000005960463, y: 0.0000000034417187, z: -0.0000000014256065, w: 1}
+  m_LocalRotation: {x: 0, y: 1, z: 0, w: 0}
   m_LocalPosition: {x: -0.307, y: 0, z: -3.04}
   m_LocalScale: {x: 0.1, y: 0.2, z: 0.2}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 857701579}
-  m_LocalEulerAnglesHint: {x: 45, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 180, z: 0}
 --- !u!65 &959706058
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -4996,13 +4996,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1387179327}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.00000005960463, y: 0.0000000034417187, z: -0.0000000014256065, w: 1}
+  m_LocalRotation: {x: 0, y: 1, z: 0, w: 0}
   m_LocalPosition: {x: 0.404, y: 0, z: -3.04}
   m_LocalScale: {x: 0.1, y: 0.2, z: 0.2}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 857701579}
-  m_LocalEulerAnglesHint: {x: 45, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 180, z: 0}
 --- !u!65 &1387179329
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -6642,13 +6642,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1802931035}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.00000005960463, y: 0.0000000034417187, z: -0.0000000014256065, w: 1}
+  m_LocalRotation: {x: 0, y: 1, z: 0, w: 0}
   m_LocalPosition: {x: -0.178, y: 0, z: -3.04}
   m_LocalScale: {x: 0.1, y: 0.2, z: 0.2}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 857701579}
-  m_LocalEulerAnglesHint: {x: 45, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 180, z: 0}
 --- !u!65 &1802931037
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -6875,13 +6875,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1824290916}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.00000005960463, y: 0.0000000034417187, z: -0.0000000014256065, w: 1}
+  m_LocalRotation: {x: 0, y: 1, z: 0, w: 0}
   m_LocalPosition: {x: -0.055, y: 0, z: -3.04}
   m_LocalScale: {x: 0.1, y: 0.2, z: 0.2}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 857701579}
-  m_LocalEulerAnglesHint: {x: 45, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 180, z: 0}
 --- !u!65 &1824290918
 BoxCollider:
   m_ObjectHideFlags: 0
