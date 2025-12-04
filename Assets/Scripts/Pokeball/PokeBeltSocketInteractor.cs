@@ -4,8 +4,8 @@ using UnityEngine.XR.Interaction.Toolkit;
 
 public enum BeltSocketType
 {
-    EmptyPokeball,  // Socket 1 - always shows a generic empty ball
-    TeamPokemon     // Sockets 2-7 - team balls bound to party slots
+    EmptyPokeball,   // socket for generic capture ball
+    TeamPokemon      // socket bound to a team slot
 }
 
 public class PokeBeltSocketInteractor : XRSocketInteractor
@@ -13,20 +13,27 @@ public class PokeBeltSocketInteractor : XRSocketInteractor
     [Header("Socket Configuration")]
     [SerializeField] private BeltSocketType socketType = BeltSocketType.EmptyPokeball;
     [SerializeField] private Transform attachPoint;
-    [SerializeField] private int teamIndex = 0; // 0-5 for team slots
+    [Tooltip("Index in the captured pokémon list for Team sockets (0–5).")]
+    [SerializeField] private int teamIndex = 0;
 
-    [Header("Team Ball")]
-    [Tooltip("Prefab used for team balls (if left empty, will use PokeballPoolManager.CreateTeamPokeball).")]
+    [Header("Ball Prefabs")]
+    [Tooltip("Prefab used for the EMPTY capture ball in this socket.")]
+    [SerializeField] private PokeballGrabInteractable emptyBallPrefab;
+
+    [Tooltip("Prefab used for TEAM balls (per team socket). If null, emptyBallPrefab is used.")]
     [SerializeField] private PokeballGrabInteractable teamBallPrefab;
 
-    private PokeballPoolManager poolManager;
-    private PokeballGrabInteractable teamBall;
+    // persistent instances
+    private PokeballGrabInteractable emptyBallInstance;
+    private PokeballGrabInteractable teamBallInstance;
+
+    // --------------------------------------------------------------------
+    // Lifecycle
+    // --------------------------------------------------------------------
 
     protected override void Awake()
     {
         base.Awake();
-
-        poolManager = PokeballPoolManager.Instance ?? FindFirstObjectByType<PokeballPoolManager>();
 
         if (attachPoint == null)
             attachPoint = transform;
@@ -35,31 +42,66 @@ public class PokeBeltSocketInteractor : XRSocketInteractor
     protected override void OnEnable()
     {
         base.OnEnable();
-
-        if (InventoryManager.Instance != null)
-        {
-            InventoryManager.Instance.OnPokeballsChanged += OnPokeballsInventoryChanged;
-            InventoryManager.Instance.OnTeamChanged += OnTeamChanged;
-        }
+        // Event subscription is deferred to Start via coroutine
     }
 
     protected override void OnDisable()
     {
-        base.OnDisable();
-
         if (InventoryManager.Instance != null)
         {
-            InventoryManager.Instance.OnPokeballsChanged -= OnPokeballsInventoryChanged;
+            InventoryManager.Instance.OnPokeballsChanged -= OnPokeballsChanged;
             InventoryManager.Instance.OnTeamChanged -= OnTeamChanged;
         }
+
+        base.OnDisable();
     }
 
     protected override void Start()
     {
+        base.Start();
+        StartCoroutine(InitAfterInventory());
+    }
+
+    private IEnumerator InitAfterInventory()
+    {
+        // Wait until InventoryManager singleton exists
+        while (InventoryManager.Instance == null)
+            yield return null;
+
+        InventoryManager.Instance.OnPokeballsChanged += OnPokeballsChanged;
+        InventoryManager.Instance.OnTeamChanged += OnTeamChanged;
+
         RefreshSocket();
     }
 
-    // Refresh logic
+    // --------------------------------------------------------------------
+    // XR selection hook – only empty socket cares when ball leaves
+    // --------------------------------------------------------------------
+
+    protected override void OnSelectExited(SelectExitEventArgs args)
+    {
+        base.OnSelectExited(args);
+
+        if (socketType != BeltSocketType.EmptyPokeball)
+            return;
+
+        // If our empty ball was taken, re-dock it later (same instance)
+        var mb = args.interactableObject as MonoBehaviour;
+        var ball = mb ? mb.GetComponent<PokeballGrabInteractable>() : null;
+
+        if (ball != null && ball == emptyBallInstance)
+            StartCoroutine(RefreshSocketDelayed());
+    }
+
+    private IEnumerator RefreshSocketDelayed()
+    {
+        yield return null;
+        RefreshSocket();
+    }
+
+    // --------------------------------------------------------------------
+    // Main refresh
+    // --------------------------------------------------------------------
 
     private void RefreshSocket()
     {
@@ -69,114 +111,129 @@ public class PokeBeltSocketInteractor : XRSocketInteractor
             RefreshTeamSocket();
     }
 
+    // --------------------------------------------------------------------
+    // EMPTY SOCKET (generic capture ball, persistent)
+    // --------------------------------------------------------------------
+
     private void RefreshEmptySocket()
     {
         var inv = InventoryManager.Instance;
-        if (inv == null || poolManager == null)
+        if (inv == null)
             return;
 
         int count = inv.GetPokeballs();
+        bool shouldBeVisible = count > 0;
 
-        // If no pokeballs left clear any selection
-        if (count <= 0)
+        // Lazily create the instance once
+        if (emptyBallInstance == null && emptyBallPrefab != null)
+        {
+            emptyBallInstance = Instantiate(emptyBallPrefab);
+            ConfigureBallForSocket(emptyBallInstance);
+            emptyBallInstance.SetMode(PokeballGrabInteractable.BallMode.Empty);
+            emptyBallInstance.SetAssignedSpecies(null);
+        }
+
+        if (emptyBallInstance == null)
+            return;
+
+        // Hide / show based on inventory
+        emptyBallInstance.gameObject.SetActive(shouldBeVisible);
+        if (!shouldBeVisible)
         {
             if (hasSelection && interactablesSelected.Count > 0)
-            {
-                var currentInteractable = interactablesSelected[0];
-                var mb = currentInteractable as MonoBehaviour;
-                var ball = mb ? mb.GetComponent<PokeballGrabInteractable>() : null;
-
-                if (ball != null)
-                {
-                    interactionManager?.SelectExit(this, currentInteractable);
-                    poolManager.ReturnPokeballToPool(ball);
-                }
-            }
+                interactionManager?.SelectExit(this, interactablesSelected[0]);
             return;
         }
 
-        // We have pokeballs in inventory
-        if (hasSelection && interactablesSelected.Count > 0)
-        {
-            // assume current selection is already a proper Empty ball
-            return;
-        }
-
-        var newBall = poolManager.GetEmptyPokeball();
-        if (newBall == null)
-            return;
-
-        newBall.SetMode(PokeballGrabInteractable.BallMode.Empty);
-        newBall.SetAssignedSpecies(null);
-        newBall.SetBeltSocket(this);
-        newBall.SetBeltAttach(attachPoint);
-
-        newBall.transform.SetPositionAndRotation(attachPoint.position, attachPoint.rotation);
-
-        var interactable = newBall as IXRSelectInteractable;
-        if (interactionManager != null && interactable != null && CanSelect(interactable))
-        {
-            interactionManager.SelectEnter(this, interactable);
-        }
+        // Ensure it's docked & selected
+        DockAndSelectBall(emptyBallInstance);
     }
+
+    // --------------------------------------------------------------------
+    // TEAM SOCKETS (one persistent ball per team slot)
+    // --------------------------------------------------------------------
 
     private void RefreshTeamSocket()
     {
         var inv = InventoryManager.Instance;
-        if (inv == null) return;
+        if (inv == null)
+            return;
 
         var captured = inv.GetCapturedPokemons();
         if (captured == null || teamIndex < 0 || teamIndex >= captured.Count)
         {
-            // ... (your existing "no pokemon for this slot" branch)
+            // No pokémon for this slot -> hide ball if we have one
+            if (teamBallInstance != null)
+            {
+                if (hasSelection && interactablesSelected.Count > 0)
+                    interactionManager?.SelectExit(this, interactablesSelected[0]);
+                teamBallInstance.gameObject.SetActive(false);
+            }
             return;
         }
 
-        var entry = captured[teamIndex];
-        string speciesKey = entry.speciesPoolKey;
+        string speciesKey = captured[teamIndex].speciesPoolKey;
 
-        if (teamBall == null)
+        // Lazily create instance
+        if (teamBallInstance == null)
         {
-            if (teamBallPrefab != null)
-                teamBall = Instantiate(teamBallPrefab);
-            else if (poolManager != null)
-                teamBall = poolManager.CreateTeamPokeball();
+            var prefab = teamBallPrefab != null ? teamBallPrefab : emptyBallPrefab;
+            if (prefab == null)
+                return;
+
+            teamBallInstance = Instantiate(prefab);
+            ConfigureBallForSocket(teamBallInstance);
         }
 
-        if (teamBall == null) return;
+        if (teamBallInstance == null)
+            return;
 
-        // If ball already matches species and is in Team mode, keep that state (pokemon is out)
-        bool pokemonIsOut = teamBall.GetMode() == PokeballGrabInteractable.BallMode.Team &&
-                            teamBall.GetAssignedSpecies() == speciesKey;
+        teamBallInstance.gameObject.SetActive(true);
+        teamBallInstance.SetAssignedSpecies(speciesKey);
 
-        teamBall.gameObject.SetActive(true);
-        teamBall.SetAssignedSpecies(speciesKey);
-        teamBall.SetBeltSocket(this);
-        teamBall.SetBeltAttach(attachPoint);
-
-        if (!pokemonIsOut)
+        // If its pokémon is not currently out, keep it Full
+        if (teamBallInstance.GetMode() != PokeballGrabInteractable.BallMode.Team)
         {
-            // Only force Full when we either changed species or the pokemon is not out
-            teamBall.SetMode(PokeballGrabInteractable.BallMode.Full);
+            teamBallInstance.SetMode(PokeballGrabInteractable.BallMode.Full);
         }
 
-        teamBall.transform.SetPositionAndRotation(attachPoint.position, attachPoint.rotation);
+        DockAndSelectBall(teamBallInstance);
+    }
 
-        var interactable = teamBall as IXRSelectInteractable;
+    // --------------------------------------------------------------------
+    // Helpers
+    // --------------------------------------------------------------------
+
+    private void ConfigureBallForSocket(PokeballGrabInteractable ball)
+    {
+        ball.SetBeltSocket(this);
+        ball.SetBeltAttach(attachPoint);
+    }
+
+    private void DockAndSelectBall(PokeballGrabInteractable ball)
+    {
+        var pt = attachPoint != null ? attachPoint : transform;
+        ball.transform.SetPositionAndRotation(pt.position, pt.rotation);
+
+        var interactable = ball as IXRSelectInteractable;
         if (interactionManager != null && interactable != null)
         {
-            if (hasSelection && interactablesSelected.Count > 0)
+            if (hasSelection && interactablesSelected.Count > 0 &&
+                interactablesSelected[0] != interactable)
             {
                 interactionManager.SelectExit(this, interactablesSelected[0]);
             }
-            if (CanSelect(interactable))
+
+            if (!hasSelection && CanSelect(interactable))
                 interactionManager.SelectEnter(this, interactable);
         }
     }
 
-    // Event handlers
+    // --------------------------------------------------------------------
+    // Inventory events
+    // --------------------------------------------------------------------
 
-    private void OnPokeballsInventoryChanged(int newCount)
+    private void OnPokeballsChanged(int newCount)
     {
         if (socketType == BeltSocketType.EmptyPokeball)
             RefreshSocket();
@@ -188,31 +245,6 @@ public class PokeBeltSocketInteractor : XRSocketInteractor
             RefreshSocket();
     }
 
-    protected override void OnSelectExited(SelectExitEventArgs args)
-    {
-        base.OnSelectExited(args);
-
-        // Only auto-refresh empty socket when player takes the ball
-        if (socketType == BeltSocketType.EmptyPokeball)
-        {
-            StartCoroutine(RefreshSocketDelayed());
-        }
-    }
-
-    private IEnumerator RefreshSocketDelayed()
-    {
-        // wait a frame so the interaction manager finishes its bookkeeping
-        yield return null;
-        RefreshSocket();
-    }
-
-    // Public helpers
-
-    public void SetAttachPoint(Transform point)
-    {
-        attachPoint = point;
-    }
-
+    // Used by PokeballGrabInteractable.ReturnToPool if you still need it
     public BeltSocketType GetSocketType() => socketType;
-    public int GetTeamIndex() => teamIndex;
 }
