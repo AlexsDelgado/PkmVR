@@ -103,21 +103,20 @@ public class InventoryManager : MonoBehaviour
     public List<CapturedPokemon> GetCapturedPokemons() => new List<CapturedPokemon>(capturedPokemons);
     
     public int GetCapturedPokemonCount() => capturedPokemons.Count;
-    
-    public bool AddCapturedPokemon(string speciesPoolKey, PokemonData pokemonData = null)
+
+    public void AddCapturedPokemon(string poolKey)
     {
-        if (capturedPokemons.Count >= MAX_TEAM_SIZE)
+        if (string.IsNullOrEmpty(poolKey))
         {
-            Debug.LogWarning($"Equipo lleno. Máximo: {MAX_TEAM_SIZE}");
-            return false;
+            Debug.LogWarning("[Inventory] Tried to add pokemon with empty poolKey");
+            return;
         }
-        
-        capturedPokemons.Add(new CapturedPokemon(speciesPoolKey, pokemonData));
+
+        capturedPokemons.Add(new CapturedPokemon(poolKey));
+        Debug.Log($"[Inventory] Added captured Pokémon {poolKey}. Total now: {capturedPokemons.Count}");
         OnTeamChanged?.Invoke();
-        Debug.Log($"Pokemon capturado agregado al equipo: {speciesPoolKey}. Total: {capturedPokemons.Count}");
-        return true;
     }
-    
+
     public CapturedPokemon GetPokemonAt(int index)
     {
         if (index >= 0 && index < capturedPokemons.Count)

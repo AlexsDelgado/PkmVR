@@ -147,6 +147,10 @@ public class PokeballGrabInteractable : XRGrabInteractable
 
     private void OnCollisionEnter(Collision col)
     {
+        // During a wild capture, let the capture coroutine control ReturnToPool
+        if (isCapturing)
+            return;
+
         if (rb != null && rb.isKinematic) return;
 
         // Ignore collisions with anything under the same root as the belt,
@@ -167,8 +171,15 @@ public class PokeballGrabInteractable : XRGrabInteractable
         if (((1 << col.gameObject.layer) & groundLayers.value) == 0)
             return;
 
-        StartCoroutine(AutoReturnAfterDelay());
+        // SPECIAL CASE: Team balls have custom ground behaviour
+        if (beltSocket != null && beltSocket.GetSocketType() == BeltSocketType.TeamPokemon)
+        {
+            HandleTeamBallGroundCollision(col);
+            return;
+        }
 
+        // Default behaviour: empty capture balls etc.
+        StartCoroutine(AutoReturnAfterDelay());
     }
 
     private void OnTriggerEnter(Collider other)
@@ -409,19 +420,17 @@ public class PokeballGrabInteractable : XRGrabInteractable
         // should physically go back to their belt socket.
         if (beltSocket != null && beltSocket.GetSocketType() == BeltSocketType.TeamPokemon)
         {
-            // re-parent to belt attach so it follows the belt
             if (beltAttach != null)
             {
-                transform.SetParent(beltAttach, false);
-                transform.localPosition = Vector3.zero;
-                transform.localRotation = Quaternion.identity;
+                // IMPORTANT: keep world scale when reparenting, so it doesn't shrink
+                transform.SetParent(beltAttach, true);  // was: false
+
+                // Snap position/rotation to the attach point (scale untouched)
+                transform.position = beltAttach.position;
+                transform.rotation = beltAttach.rotation;
             }
 
             MakeKinematicDocked();
-
-            if (beltAttach != null)
-                transform.SetPositionAndRotation(beltAttach.position, beltAttach.rotation);
-
             TrySocketSelect();
             return;
         }
@@ -522,7 +531,79 @@ public class PokeballGrabInteractable : XRGrabInteractable
     private IEnumerator AutoReturnAfterDelay()
     {
         yield return new WaitForSeconds(groundReturnDelay);
-        ReturnToPool();   // this is the same ReturnToPool that already works for capture
+
+        //if a capture started during the delay, abort the auto-return
+        if (isCapturing)
+            yield break;
+
+        ReturnToPool();
+    }
+
+    private void HandleTeamBallGroundCollision(Collision col)
+    {
+        // Only meaningful if this ball belongs to a team socket
+        if (beltSocket == null || beltSocket.GetSocketType() != BeltSocketType.TeamPokemon)
+            return;
+
+        // Where to spawn the Pokémon on release
+        Vector3 spawnPos = transform.position;
+        if (col.contacts != null && col.contacts.Length > 0)
+        {
+            spawnPos = col.contacts[0].point;
+        }
+        spawnPos += Vector3.up * spawnLift; // small lift so it doesn't clip
+
+        switch (mode)
+        {
+            // FULL = Pokémon is inside the ball. Hitting the ground should RELEASE it.
+            case BallMode.Full:
+                {
+                    string speciesKey = assignedSpeciesPoolKey;
+                    if (!string.IsNullOrEmpty(speciesKey))
+                    {
+                        // Spawn the party Pokémon using the assigned pool key
+                        var go = PoolManager.I.Spawn(speciesKey, spawnPos, Quaternion.identity);
+                        var pokemon = go.GetComponent<PokemonController>();
+                        pokemon?.Init();
+
+                        // Mark it as a caught/party Pokémon so it runs the right behaviours
+                        var behavior = go.GetComponent<PokemonBehaviorManager>();
+                        behavior?.EnterCaught();
+
+                        // Link this ball to that specific instance
+                        activePokemon = pokemon;
+
+                        // Small cooldown so ball doesn't instantly re-trigger on overlap
+                        nextRetrievalTime = Time.time + retrievalCooldown;
+                    }
+                    else
+                    {
+                        Debug.LogWarning("[Pokeball] Team ball has no assigned species key when trying to release.");
+                    }
+
+                    // Ball is now "empty but linked" (owner Pokémon is out in the world)
+                    mode = BallMode.Team;
+
+                    // Immediately go back to its belt socket
+                    ReturnToPool();
+                    break;
+                }
+
+            // TEAM = Pokémon is already out; ground hit just sends ball home.
+            case BallMode.Team:
+                {
+                    ReturnToPool();
+                    break;
+                }
+
+            // EMPTY here shouldn't really happen for a team socket,
+            // but just in case, treat it like "go back to belt".
+            case BallMode.Empty:
+                {
+                    ReturnToPool();
+                    break;
+                }
+        }
     }
 
     // Public API used by pool / belt --------------------------------------
