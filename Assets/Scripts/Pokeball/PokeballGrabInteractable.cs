@@ -279,6 +279,18 @@ public class PokeballGrabInteractable : XRGrabInteractable
 
         for (int i = 0; i < shakesCount; i++)
         {
+            switch (i)
+            {
+                case 0:
+                    SoundManager.Instance.PlaySFX(SoundName.Pokeball1);
+                    break;
+                case 1:
+                    SoundManager.Instance.PlaySFX(SoundName.Pokeball2);
+                    break;
+                case 2:
+                    SoundManager.Instance.PlaySFX(SoundName.Pokeball3);
+                    break;
+            }
             float prePause = timeBetweenShakes * 0.25f;
             t = prePause;
             while (t > 0f)
@@ -319,6 +331,7 @@ public class PokeballGrabInteractable : XRGrabInteractable
 
         if (escaped)
         {
+            SoundManager.Instance.PlaySFX(SoundName.PokeballFlee);
             // pokemon breaks free
             var go = PoolManager.I.Spawn(speciesKey, pokemonPos, Quaternion.identity);
             var newPokemon = go.GetComponent<PokemonController>();
@@ -329,6 +342,7 @@ public class PokeballGrabInteractable : XRGrabInteractable
         }
         else
         {
+            SoundManager.Instance.PlaySFX(SoundName.PokeballSuccess);
             // successful capture
             if (InventoryManager.Instance != null)
             {
