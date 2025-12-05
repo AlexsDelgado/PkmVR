@@ -148,9 +148,9 @@ MonoBehaviour:
   - {fileID: 8556675971100917838}
   dissolveProp: _Dissolve
   edgeColorProp: _EdgeColor
-  inTime: 0.35
+  inTime: 0.6
   outTime: 0.25
-  edgeColor: {r: 0.6, g: 0.9, b: 1, a: 1}
+  edgeColor: {r: 0.6981132, g: 0.011817729, b: 0, a: 1}
   edgeWidth: 0.08
 --- !u!1001 &7955809128544234471
 PrefabInstance:
