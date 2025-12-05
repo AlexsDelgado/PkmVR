@@ -39,13 +39,12 @@ public class PokemonsManager : MonoBehaviour
         }
         for (int i = 0; i < 3; i++)
         {
-            StoredPokemon pkm = equiped_pokemons[i];
+            if (equiped_pokemons[i].captured_number == -1)
             {
-                if (pkm.captured_number == -1)
-                {
-                    pkm = my_pokemons[my_pokemons.Count - 1];
-                    return;
-                }
+                my_pokemons[my_pokemons.Count - 1].equiped = true;
+                equiped_pokemons[i] = my_pokemons[my_pokemons.Count - 1];
+                PC_Manager.instance.ShowPokemonList();
+                return;
             }
         }
         PC_Manager.instance.ShowPokemonList();
