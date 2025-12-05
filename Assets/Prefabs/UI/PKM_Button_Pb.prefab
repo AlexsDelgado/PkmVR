@@ -224,6 +224,7 @@ GameObject:
   - component: {fileID: 1166292187280512770}
   - component: {fileID: 1191002596702286764}
   - component: {fileID: 4883834783910220193}
+  - component: {fileID: -2630473368387285533}
   m_Layer: 5
   m_Name: PKM_Button_Pb
   m_TagString: Untagged
@@ -360,3 +361,17 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   portrait: {fileID: 4307381498609158445}
   txt: {fileID: 2641082320472393627}
+--- !u!114 &-2630473368387285533
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6748364494181420692}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 03f079c0c3a0d374689decd2fc6ead9d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  hoverSound: 10
+  clickSound: 11

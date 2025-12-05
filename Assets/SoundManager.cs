@@ -35,15 +35,19 @@ public class SoundManager : MonoBehaviour
     [SerializeField] AudioSource musicSource;
     [SerializeField] AudioSource sfxSource;
 
+    public void PlaySFX(int s_name) => PlaySFX((SoundName)s_name);
     public void PlaySFX(SoundName s_name)
     {
-        if (soundDict.ContainsKey(s_name) && soundDict[s_name] != null)
-        {
-            // Usar pool para reproducir m�ltiples sonidos simult�neamente
-            sfxSource.resource = soundDict[s_name];
-        }
+        // if (soundDict.ContainsKey(s_name) && soundDict[s_name] != null)
+        // {
+        //     // Usar pool para reproducir m�ltiples sonidos simult�neamente
+        //     sfxSource.resource = soundDict[s_name];
+        // }
+
+        sfxSource.PlayOneShot(soundDict[s_name]);
     }
 
+    public void PlayMusic(int s_name) => PlaySFX((SoundName)s_name);
     public void PlayMusic(SoundName s_name)
     {
         if (soundDict.ContainsKey(s_name) && soundDict[s_name] != null)
@@ -54,6 +58,7 @@ public class SoundManager : MonoBehaviour
         }
     }
 
+    public void PlayBGM(int s_name) => PlaySFX((SoundName)s_name);
     public void PlayBGM(SoundName s_name)
     {
         if (musicSource && soundDict[s_name]) musicSource.PlayOneShot(soundDict[s_name]);

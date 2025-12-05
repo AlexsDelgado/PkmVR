@@ -14,6 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   portrait: {fileID: 21300000, guid: a6991eebdd9a5ac45936dc34be39307d, type: 3}
   model_pf: {fileID: 7109459304062473910, guid: 0b7893bb320e80c448f98960c3ec0883, type: 3}
+  cry: {fileID: 8300000, guid: 9700c7dc7cb821443b8859158eeda11b, type: 3}
   type1: {fileID: 11400000, guid: 12905381c78f2cf49becedb093b3afc2, type: 2}
   maxHP: 50
   physicalDMG: 3

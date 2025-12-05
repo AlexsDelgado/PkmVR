@@ -9,6 +9,7 @@ public class PokemonData : ScriptableObject
     [Header("Info")]
     public Sprite portrait;
     public GameObject model_pf;
+    public AudioClip cry;
 
     [Header("Types")]
     public TypeData type1;

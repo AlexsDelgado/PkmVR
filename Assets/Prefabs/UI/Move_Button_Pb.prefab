@@ -149,6 +149,7 @@ GameObject:
   - component: {fileID: 701742021128429737}
   - component: {fileID: 3507881617541950488}
   - component: {fileID: 4529734393079984244}
+  - component: {fileID: -8641583833173959047}
   m_Layer: 5
   m_Name: Move_Button_Pb
   m_TagString: Untagged
@@ -288,3 +289,17 @@ MonoBehaviour:
   my_image: {fileID: 701742021128429737}
   equiped_move: {r: 0, g: 0, b: 0, a: 0.39215687}
   equiped: 0
+--- !u!114 &-8641583833173959047
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5067517454801579325}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 03f079c0c3a0d374689decd2fc6ead9d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  hoverSound: 10
+  clickSound: 9

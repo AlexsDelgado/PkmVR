@@ -12,8 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 61237c23a8278b14fb59d3a97ba329f6, type: 3}
   m_Name: Butterfree
   m_EditorClassIdentifier: 
-  portrait: {fileID: 0}
+  portrait: {fileID: 21300000, guid: 1bda800c639262c4ba48ce12b916f2b2, type: 3}
   model_pf: {fileID: 0}
+  cry: {fileID: 8300000, guid: 65454a59f015e994985d2472ac1750d2, type: 3}
   type1: {fileID: 11400000, guid: 12905381c78f2cf49becedb093b3afc2, type: 2}
   maxHP: 0
   physicalDMG: 0
