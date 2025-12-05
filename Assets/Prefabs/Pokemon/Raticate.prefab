@@ -1007,7 +1007,7 @@ MonoBehaviour:
   playerTarget: {fileID: 0}
   moveSpeed: 1.8
   rotationSpeed: 6
-  stopDistance: 1.2
+  stopDistance: 3.5
   walkBoolName: IsWalking
 --- !u!114 &4594530279091354616
 MonoBehaviour:
