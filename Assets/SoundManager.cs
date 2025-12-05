@@ -39,7 +39,7 @@ public class SoundManager : MonoBehaviour
     {
         if (soundDict.ContainsKey(s_name) && soundDict[s_name] != null)
         {
-            // Usar pool para reproducir múltiples sonidos simultáneamente
+            // Usar pool para reproducir mï¿½ltiples sonidos simultï¿½neamente
             sfxSource.resource = soundDict[s_name];
         }
     }
@@ -48,7 +48,7 @@ public class SoundManager : MonoBehaviour
     {
         if (soundDict.ContainsKey(s_name) && soundDict[s_name] != null)
         {
-            // Usar pool para reproducir múltiples sonidos simultáneamente
+            // Usar pool para reproducir mï¿½ltiples sonidos simultï¿½neamente
             //musicSource.Play(soundDict[s_name]);
             musicSource.resource = soundDict[s_name];
         }
@@ -74,6 +74,24 @@ public struct DictionaryElement<T, K>
 
 public enum SoundName
 {
-    None,
-
-}
+    Ruta3,
+    Lavanda,
+    Rocket,
+    CaminoVictoria,
+    GoTour,
+    Masara,
+    Encounter,
+    PC_ON,
+    PC_OFF,
+    PC_Button1,
+    PC_Button2,
+    PC_Button3,
+    PC_Error,
+    PokeballThrow,
+    PokeballHit,
+    Pokeball1,
+    Pokeball2,
+    Pokeball3,
+    PokeballSuccess,
+    PokeballFlee
+    }
