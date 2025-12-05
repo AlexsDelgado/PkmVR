@@ -7874,7 +7874,9 @@ MonoBehaviour:
   money: 1000
   pokeballs: 5
   potions: 0
-  capturedPokemons: []
+  capturedPokemons:
+  - speciesPoolKey: Squirtle
+    pokemonData: {fileID: 11400000, guid: 20af0fba56427c2469a047f0fe78a7c5, type: 2}
 --- !u!4 &1161733732
 Transform:
   m_ObjectHideFlags: 0
@@ -13295,8 +13297,71 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   pools:
+  - key: Arbok
+    prefab: {fileID: 5396534986475537905, guid: cd0dca70dc41a9e47a00bf3655a3b745, type: 3}
+    prewarm: 6
+  - key: Beedrill
+    prefab: {fileID: 8869295387793449227, guid: 81c25b0c6a011af45813d5150b1febd6, type: 3}
+    prewarm: 6
+  - key: Blastoise
+    prefab: {fileID: 3635125100979243280, guid: 7221a9d4f114c444d80f4bfeea0091b9, type: 3}
+    prewarm: 6
+  - key: Butterfree
+    prefab: {fileID: 4201575793905472320, guid: 6c5be9ce221c869428db9fb46b5e375b, type: 3}
+    prewarm: 6
+  - key: Caterpie
+    prefab: {fileID: 115178016574196039, guid: 87688ba8b2790a8419da1448137862df, type: 3}
+    prewarm: 6
+  - key: Charizard
+    prefab: {fileID: 1033337311838872811, guid: 72339b96f44aa38488fe897e56bc8b54, type: 3}
+    prewarm: 6
+  - key: Ekans
+    prefab: {fileID: 7263845065642548674, guid: 0ce4e24e0c7be3643b03dcb36c712b40, type: 3}
+    prewarm: 6
+  - key: Fearow
+    prefab: {fileID: 4028596215578687197, guid: 9a2f86a4194b3a54ab1faf5fcf1451a6, type: 3}
+    prewarm: 6
+  - key: Kakuna
+    prefab: {fileID: 2698547388287167690, guid: cb365573ba2d06a4f877138bfadb19c9, type: 3}
+    prewarm: 6
+  - key: Metapod
+    prefab: {fileID: 4602683543588952029, guid: c9c6cfc38d6fe714b95e4aee99477d0f, type: 3}
+    prewarm: 6
+  - key: Nidoran
+    prefab: {fileID: 6701496903219659996, guid: 25079a048c713f944bf543124495955e, type: 3}
+    prewarm: 6
+  - key: Nidorina
+    prefab: {fileID: 64939822682660421, guid: 921782c245017da4daf1c2bcb1ff4338, type: 3}
+    prewarm: 6
+  - key: Pidgeot
+    prefab: {fileID: 4840523215446621341, guid: bef6ab5515a71434192619942d1420ea, type: 3}
+    prewarm: 6
+  - key: Pidgeotto
+    prefab: {fileID: 2982386364190861146, guid: b466d3b79e6c504478f802e563614e1b, type: 3}
+    prewarm: 6
+  - key: Pidgey
+    prefab: {fileID: 3056749003685611708, guid: deb4717c10b176e449d0b3bf448cc2cb, type: 3}
+    prewarm: 6
+  - key: Raticate
+    prefab: {fileID: 5877544933706270246, guid: 6b53e15f9f973af439b9aaa4f38c7fa0, type: 3}
+    prewarm: 6
+  - key: Rattata
+    prefab: {fileID: 3786116467792625740, guid: 7f22c0e7eb25edc4b91b70bb4fe549de, type: 3}
+    prewarm: 6
+  - key: Sandshrew
+    prefab: {fileID: 8959412344935447921, guid: f2d2146528f572d47bce45483c42030b, type: 3}
+    prewarm: 6
+  - key: Sandslash
+    prefab: {fileID: 6437607576044686040, guid: 7090f9b97ca6a81438093ecb057a9106, type: 3}
+    prewarm: 6
   - key: Squirtle
     prefab: {fileID: 7109459304062473910, guid: 0b7893bb320e80c448f98960c3ec0883, type: 3}
+    prewarm: 6
+  - key: Wartortle
+    prefab: {fileID: 7397149740406490233, guid: cb628358ccf26fd42bacdb57e2f7d25e, type: 3}
+    prewarm: 6
+  - key: Weedle
+    prefab: {fileID: 4437606160229288918, guid: f52bfb46b6930854fa4d663c91698090, type: 3}
     prewarm: 6
   - key: fx_flash
     prefab: {fileID: 3092707449280936494, guid: bed9b85395b12bb43bfef735a616f77b, type: 3}

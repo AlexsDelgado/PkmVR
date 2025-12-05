@@ -335,6 +335,11 @@ public class PokeballGrabInteractable : XRGrabInteractable
                 InventoryManager.Instance.AddCapturedPokemon(speciesKey);
                 InventoryManager.Instance.SpendPokeball();
             }
+            if (PokemonsManager.Instance != null)
+            {
+                PokemonsManager.Instance.AddNewPokemon(pokemon.pkm_data, 5);
+            }
+            
         }
 
         t = 0.35f;

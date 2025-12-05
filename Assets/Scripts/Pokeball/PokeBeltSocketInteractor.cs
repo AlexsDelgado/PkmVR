@@ -14,7 +14,7 @@ public class PokeBeltSocketInteractor : XRSocketInteractor
     [SerializeField] private BeltSocketType socketType = BeltSocketType.EmptyPokeball;
     [SerializeField] private Transform attachPoint;
     [Tooltip("Index in the captured pokémon list for Team sockets (0–5).")]
-    [SerializeField] private int teamIndex = 0;
+    [SerializeField] public int teamIndex = 0;
 
     [Header("Ball Prefabs")]
     [Tooltip("Prefab used for the EMPTY capture ball in this socket.")]
@@ -198,6 +198,7 @@ public class PokeBeltSocketInteractor : XRSocketInteractor
         if (teamBallInstance.GetMode() != PokeballGrabInteractable.BallMode.Team)
         {
             teamBallInstance.SetMode(PokeballGrabInteractable.BallMode.Full);
+            teamBallInstance.SetAssignedSpecies(PokemonsManager.Instance.equiped_pokemons[teamIndex].pokemon.name);
         }
 
         DockAndSelectBall(teamBallInstance);
