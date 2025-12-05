@@ -348,6 +348,18 @@ PrefabInstance:
       propertyPath: m_Name
       value: Arbok
       objectReference: {fileID: 0}
+    - target: {fileID: 934708607538947017, guid: 7715569fc5a36314395b416548e4c203, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 44769b6bc1bf2834682b1de44af6bd08, type: 2}
+    - target: {fileID: 934708607538947017, guid: 7715569fc5a36314395b416548e4c203, type: 3}
+      propertyPath: 'm_Materials.Array.data[1]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 006b5a5926fb6cf43847e4aa7d5d2ca1, type: 2}
+    - target: {fileID: 934708607538947017, guid: 7715569fc5a36314395b416548e4c203, type: 3}
+      propertyPath: 'm_Materials.Array.data[2]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 93fc0cbc192ac1f4dbf25f3281d12067, type: 2}
     - target: {fileID: 1149078710535319811, guid: 7715569fc5a36314395b416548e4c203, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
       value: -0.78520787

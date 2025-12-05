@@ -200,6 +200,14 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: -128738384806797153, guid: 5c13d9dc9b3ba9545890e36d4aa289e0, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 8a3aa9a68c515c34b8599a4e08402402, type: 2}
+    - target: {fileID: -128738384806797153, guid: 5c13d9dc9b3ba9545890e36d4aa289e0, type: 3}
+      propertyPath: 'm_Materials.Array.data[1]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 83de35f5af7c4304ebc612a3b73a4bfb, type: 2}
     - target: {fileID: 919132149155446097, guid: 5c13d9dc9b3ba9545890e36d4aa289e0, type: 3}
       propertyPath: m_Name
       value: Kakuna

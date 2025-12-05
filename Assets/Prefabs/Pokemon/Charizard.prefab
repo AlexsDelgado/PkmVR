@@ -201,6 +201,26 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: -7266823383671348661, guid: 0f0a82d1c98867a40ae5ef2af04a0b72, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: b19b420cc10f5a941b099e0fecd0fc7b, type: 2}
+    - target: {fileID: -7266823383671348661, guid: 0f0a82d1c98867a40ae5ef2af04a0b72, type: 3}
+      propertyPath: 'm_Materials.Array.data[1]'
+      value: 
+      objectReference: {fileID: 2100000, guid: b10c2b3be4822544d8bb51e124233a7a, type: 2}
+    - target: {fileID: -3993647295794395330, guid: 0f0a82d1c98867a40ae5ef2af04a0b72, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 017fb8a6928778c43877eb2b2f6b684f, type: 2}
+    - target: {fileID: -3993647295794395330, guid: 0f0a82d1c98867a40ae5ef2af04a0b72, type: 3}
+      propertyPath: 'm_Materials.Array.data[1]'
+      value: 
+      objectReference: {fileID: 2100000, guid: d4624fc55672ed44490b64ddf5ddb508, type: 2}
+    - target: {fileID: -3993647295794395330, guid: 0f0a82d1c98867a40ae5ef2af04a0b72, type: 3}
+      propertyPath: 'm_Materials.Array.data[2]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 46415ff2cac15164d952da8d2dfc8836, type: 2}
     - target: {fileID: 919132149155446097, guid: 0f0a82d1c98867a40ae5ef2af04a0b72, type: 3}
       propertyPath: m_Name
       value: Charizard

@@ -218,10 +218,26 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: -3079620246206475975, guid: 4a3519848e6873a4485ce44277728706, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 10a8a146015a2094d8811b2f52a00b79, type: 2}
+    - target: {fileID: -3079620246206475975, guid: 4a3519848e6873a4485ce44277728706, type: 3}
+      propertyPath: 'm_Materials.Array.data[1]'
+      value: 
+      objectReference: {fileID: 2100000, guid: a243a37e518041440968c42f0a201517, type: 2}
+    - target: {fileID: -815591368529029324, guid: 4a3519848e6873a4485ce44277728706, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 8e66a562e27f08c4a9ccd400fb9924dd, type: 2}
     - target: {fileID: 919132149155446097, guid: 4a3519848e6873a4485ce44277728706, type: 3}
       propertyPath: m_Name
       value: Butterfree
       objectReference: {fileID: 0}
+    - target: {fileID: 8346930222210054604, guid: 4a3519848e6873a4485ce44277728706, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 1d536d268f40f3448a0c3412d75025bf, type: 2}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects:

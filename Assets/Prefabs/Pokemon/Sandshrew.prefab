@@ -445,6 +445,14 @@ PrefabInstance:
       propertyPath: m_Name
       value: Sandshrew
       objectReference: {fileID: 0}
+    - target: {fileID: 987682481624774418, guid: a3d9edf0e132e684c97ed3881ee38331, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: fad23b91e40bb684982b1d95bdd6e3a9, type: 2}
+    - target: {fileID: 987682481624774418, guid: a3d9edf0e132e684c97ed3881ee38331, type: 3}
+      propertyPath: 'm_Materials.Array.data[1]'
+      value: 
+      objectReference: {fileID: 2100000, guid: af27f2f6e114bb44a9279e57e5a0fe6d, type: 2}
     - target: {fileID: 1120753613848573769, guid: a3d9edf0e132e684c97ed3881ee38331, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
       value: -0.000000010269036
@@ -553,6 +561,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0.000000018057243
       objectReference: {fileID: 0}
+    - target: {fileID: 5918300524945634843, guid: a3d9edf0e132e684c97ed3881ee38331, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: c1d80c87df214484fa46e1253716e5e4, type: 2}
     - target: {fileID: 5938622556382785835, guid: a3d9edf0e132e684c97ed3881ee38331, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
       value: -8.227937

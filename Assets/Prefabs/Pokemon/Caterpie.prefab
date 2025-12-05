@@ -312,6 +312,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Caterpie
       objectReference: {fileID: 0}
+    - target: {fileID: 1871153850687395965, guid: aa84d01e823d62b49bb55ebe212f67a2, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: f53dbf5e95b4d6e4bb5e91a989084298, type: 2}
     - target: {fileID: 3555931994825115545, guid: aa84d01e823d62b49bb55ebe212f67a2, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
       value: -0.0000023302694

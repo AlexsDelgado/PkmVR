@@ -484,6 +484,14 @@ PrefabInstance:
       propertyPath: m_Name
       value: Nidorina
       objectReference: {fileID: 0}
+    - target: {fileID: 1546944912183627982, guid: 0cfdf8fec3e81f9498c5abf0b76d111a, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: df75188287779c9419541f1851a8e1d4, type: 2}
+    - target: {fileID: 1546944912183627982, guid: 0cfdf8fec3e81f9498c5abf0b76d111a, type: 3}
+      propertyPath: 'm_Materials.Array.data[1]'
+      value: 
+      objectReference: {fileID: 2100000, guid: d9f14ef95e4f4b34dab26ed1487815a7, type: 2}
     - target: {fileID: 1903186160502143744, guid: 0cfdf8fec3e81f9498c5abf0b76d111a, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: -5.3733297e-14
