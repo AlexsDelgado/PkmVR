@@ -429,7 +429,28 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   pokemonPoolKeys:
+  - Arbok
+  - Beedrill
+  - Blastoise
+  - Butterfree
+  - Caterpie
+  - Charizard
+  - Ekans
+  - Fearow
+  - Kakuna
+  - Metapod
+  - Nidoran
+  - Nidorina
+  - Pidgeot
+  - Pidgeotto
+  - Pidgey
+  - Raticate
+  - Rattata
+  - Sandshrew
+  - Sandslash
   - Squirtle
+  - Wartortle
+  - Weedle
   maxPokemon: 5
   initialMinLifetimeMinutes: 3
   initialMaxLifetimeMinutes: 8
@@ -6797,7 +6818,7 @@ Transform:
   m_GameObject: {fileID: 1043429404}
   serializedVersion: 2
   m_LocalRotation: {x: 0.90962684, y: -0.008673714, z: -0.14982139, w: 0.38737246}
-  m_LocalPosition: {x: -6.4, y: 11, z: 0.85}
+  m_LocalPosition: {x: 46.8, y: 48.2, z: 0.85}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -7874,9 +7895,7 @@ MonoBehaviour:
   money: 1000
   pokeballs: 5
   potions: 0
-  capturedPokemons:
-  - speciesPoolKey: Squirtle
-    pokemonData: {fileID: 11400000, guid: 20af0fba56427c2469a047f0fe78a7c5, type: 2}
+  capturedPokemons: []
 --- !u!4 &1161733732
 Transform:
   m_ObjectHideFlags: 0
@@ -8417,77 +8436,25 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   equiped_pokemons:
-  - pokemon: {fileID: 11400000, guid: 20af0fba56427c2469a047f0fe78a7c5, type: 2}
-    current_lvl: 5
-    active_moves:
-    - {fileID: 11400000, guid: 94207203fd0a3414ba7f889d706d293a, type: 2}
-    - {fileID: 0}
-    - {fileID: 0}
-    - {fileID: 0}
-    equiped_moves_ammount: 1
-    equiped: 1
-    captured_number: 0
-  - pokemon: {fileID: 11400000, guid: d89e6fcdfdc8a66428a9eb485ce28f7b, type: 2}
-    current_lvl: 5
-    active_moves:
-    - {fileID: 11400000, guid: 94207203fd0a3414ba7f889d706d293a, type: 2}
-    - {fileID: 0}
-    - {fileID: 0}
-    - {fileID: 0}
-    equiped_moves_ammount: 1
-    equiped: 1
-    captured_number: 1
   - pokemon: {fileID: 0}
     current_lvl: 0
-    active_moves:
-    - {fileID: 0}
-    - {fileID: 0}
-    - {fileID: 0}
-    - {fileID: 0}
+    active_moves: []
     equiped_moves_ammount: 0
     equiped: 0
     captured_number: -1
-  my_pokemons:
-  - pokemon: {fileID: 11400000, guid: 20af0fba56427c2469a047f0fe78a7c5, type: 2}
-    current_lvl: 5
-    active_moves:
-    - {fileID: 11400000, guid: 94207203fd0a3414ba7f889d706d293a, type: 2}
-    - {fileID: 0}
-    - {fileID: 0}
-    - {fileID: 0}
-    equiped_moves_ammount: 1
-    equiped: 1
-    captured_number: 0
-  - pokemon: {fileID: 11400000, guid: d89e6fcdfdc8a66428a9eb485ce28f7b, type: 2}
-    current_lvl: 5
-    active_moves:
-    - {fileID: 11400000, guid: 94207203fd0a3414ba7f889d706d293a, type: 2}
-    - {fileID: 0}
-    - {fileID: 0}
-    - {fileID: 0}
-    equiped_moves_ammount: 1
-    equiped: 1
-    captured_number: 1
-  - pokemon: {fileID: 11400000, guid: 20af0fba56427c2469a047f0fe78a7c5, type: 2}
-    current_lvl: 5
-    active_moves:
-    - {fileID: 11400000, guid: 94207203fd0a3414ba7f889d706d293a, type: 2}
-    - {fileID: 0}
-    - {fileID: 0}
-    - {fileID: 0}
-    equiped_moves_ammount: 1
+  - pokemon: {fileID: 0}
+    current_lvl: 0
+    active_moves: []
+    equiped_moves_ammount: 0
     equiped: 0
-    captured_number: 2
-  - pokemon: {fileID: 11400000, guid: 20af0fba56427c2469a047f0fe78a7c5, type: 2}
-    current_lvl: 5
-    active_moves:
-    - {fileID: 11400000, guid: 94207203fd0a3414ba7f889d706d293a, type: 2}
-    - {fileID: 0}
-    - {fileID: 0}
-    - {fileID: 0}
-    equiped_moves_ammount: 1
+    captured_number: -1
+  - pokemon: {fileID: 0}
+    current_lvl: 0
+    active_moves: []
+    equiped_moves_ammount: 0
     equiped: 0
-    captured_number: 3
+    captured_number: -1
+  my_pokemons: []
   exp_to_lvl_up_base: 10
   extra_exp_per_lvl: 1
   default_moves:
@@ -13334,10 +13301,10 @@ MonoBehaviour:
     prefab: {fileID: 64939822682660421, guid: 921782c245017da4daf1c2bcb1ff4338, type: 3}
     prewarm: 6
   - key: Pidgeot
-    prefab: {fileID: 4840523215446621341, guid: bef6ab5515a71434192619942d1420ea, type: 3}
+    prefab: {fileID: 4840523215446621341, guid: b466d3b79e6c504478f802e563614e1b, type: 3}
     prewarm: 6
   - key: Pidgeotto
-    prefab: {fileID: 2982386364190861146, guid: b466d3b79e6c504478f802e563614e1b, type: 3}
+    prefab: {fileID: 2982386364190861146, guid: bef6ab5515a71434192619942d1420ea, type: 3}
     prewarm: 6
   - key: Pidgey
     prefab: {fileID: 3056749003685611708, guid: deb4717c10b176e449d0b3bf448cc2cb, type: 3}

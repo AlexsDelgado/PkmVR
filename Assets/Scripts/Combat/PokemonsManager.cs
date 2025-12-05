@@ -35,6 +35,18 @@ public class PokemonsManager : MonoBehaviour
         else
         {
             my_pokemons.Add(new StoredPokemon(my_pokemon, lvl, moves, my_pokemons.Count));
+            
+        }
+        for (int i = 0; i < 3; i++)
+        {
+            StoredPokemon pkm = equiped_pokemons[i];
+            {
+                if (pkm.pokemon == null)
+                {
+                    pkm = my_pokemons[my_pokemons.Count - 1];
+                    return;
+                }
+            }
         }
     }
     public void EquipPokemon(int pkm_idx, int team_pos)
