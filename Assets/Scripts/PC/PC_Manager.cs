@@ -36,7 +36,7 @@ public class PC_Manager : MonoBehaviour
     public void ShowPokemonList()
     {
         List<StoredPokemon> pkmList = pkm_manager.my_pokemons;
-        
+
         for (int i = 0; i < pkmList.Count; i++)
         {
             if (i >= pc_pokemons.Count) pc_pokemons.Add(Instantiate(pc_pkm_pf, pc_pkm_spwn));

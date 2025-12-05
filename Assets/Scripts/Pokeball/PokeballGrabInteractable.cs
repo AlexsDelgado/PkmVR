@@ -563,7 +563,8 @@ public class PokeballGrabInteractable : XRGrabInteractable
             // FULL = Pokémon is inside the ball. Hitting the ground should RELEASE it.
             case BallMode.Full:
                 {
-                    string speciesKey = assignedSpeciesPoolKey;
+                    //string speciesKey = assignedSpeciesPoolKey;
+                    string speciesKey = PokemonsManager.Instance.equiped_pokemons[beltSocket.teamIndex].pokemon.name;
                     if (!string.IsNullOrEmpty(speciesKey))
                     {
                         // Spawn the party Pokémon using the assigned pool key

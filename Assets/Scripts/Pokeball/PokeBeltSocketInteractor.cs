@@ -198,7 +198,7 @@ public class PokeBeltSocketInteractor : XRSocketInteractor
         if (teamBallInstance.GetMode() != PokeballGrabInteractable.BallMode.Team)
         {
             teamBallInstance.SetMode(PokeballGrabInteractable.BallMode.Full);
-            teamBallInstance.SetAssignedSpecies(PokemonsManager.Instance.equiped_pokemons[teamIndex].pokemon.name);
+            //teamBallInstance.SetAssignedSpecies(PokemonsManager.Instance.equiped_pokemons[teamIndex].pokemon.name);
         }
 
         DockAndSelectBall(teamBallInstance);

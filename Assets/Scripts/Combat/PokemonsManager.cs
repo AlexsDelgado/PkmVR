@@ -41,13 +41,14 @@ public class PokemonsManager : MonoBehaviour
         {
             StoredPokemon pkm = equiped_pokemons[i];
             {
-                if (pkm.pokemon == null)
+                if (pkm.captured_number == -1)
                 {
                     pkm = my_pokemons[my_pokemons.Count - 1];
                     return;
                 }
             }
         }
+        PC_Manager.instance.ShowPokemonList();
     }
     public void EquipPokemon(int pkm_idx, int team_pos)
     {
